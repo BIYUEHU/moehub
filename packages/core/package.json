@@ -1,0 +1,39 @@
+{
+  "name": "@moehub/core",
+  "version": "1.0.0",
+  "description": "Your anime character collection gallery, easily build, freely share.",
+  "main": "lib/index.js",
+  "license": "GPL-3.0",
+  "author": "Romi <biyuehuya@gmail.com>",
+  "keywords": [
+    "anime",
+    "character",
+    "gallery",
+    "share",
+    "acg",
+    "server",
+    "bot",
+    "web",
+    "back-end"
+  ],
+  "bugs": {
+    "url": "https://github.com/biyuehu/moehub/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/biyuehu/moehub.git"
+  },
+  "dependencies": {
+    "@kotori-bot/logger": "^1.3.1",
+    "@prisma/client": "^5.15.0",
+    "koa": "^2.15.3",
+    "koa-bodyparser": "^4.4.1",
+    "koa-router": "^12.0.1"
+  },
+  "devDependencies": {
+    "@types/koa": "^2.15.0",
+    "@types/koa-bodyparser": "^4.3.12",
+    "@types/koa-router": "^7.4.8",
+    "prisma": "5.15.0"
+  }
+}

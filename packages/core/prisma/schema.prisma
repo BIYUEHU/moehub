@@ -1,0 +1,124 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum SeriesGenre {
+  ANIME
+  COMIC
+  GALGAME
+  GAME
+  NOVEL
+  OTHER
+}
+
+enum bloodType {
+  A
+  B
+  AB
+  O
+}
+
+model Character {
+  id          Int                       @id @default(autoincrement()) // 唯一标识符
+  // 必要数据
+  name        String // 角色名（日语原名）
+  romanized   String // 角色名罗马音
+  gender      Gender // 角色性别
+  // 基本数据
+  alias       String? // 角色中文名、昵称、别名（字符串数组）
+  age         Int? // 角色年龄
+  images      String? // 角色相关图片（字符串数组）
+  url         String? // 角色相关链接（字符串数组）
+  description String? // 角色描述
+  comment     String? // 角色个人评论
+  hitokoto    String? // 角色一言
+  birthday    DateTime? // 角色生日
+  actor       Actor?                    @relation(fields: [actorId], references: [id]) // 角色声优
+  actorId     Int?
+  // 关联数据
+  series      Series                    @relation(fields: [seriesId], references: [id]) // 角色所属系列作品
+  seriesId    Int
+  collections CharacterWithCollection[] // 角色所属收藏夹
+  tags        CharacterWithTag[] // 角色萌点
+  // 额外数据
+  hairColor   String? // 角色发色
+  eyeColor    String? // 角色瞳色
+  bloodType   bloodType? // 角色血型
+  height      Int? // 角色身高
+  bust        Int? // 角色胸围
+  waist       Int? // 角色腰围
+  hip         String? // 角色臀围
+
+  createdAt DateTime @default(now())
+
+  @@unique([id, name])
+}
+
+model Actor {
+  id         Int         @id @default(autoincrement())
+  name       String // 声优名
+  characters Character[]
+
+  @@unique([id, name])
+}
+
+model Series {
+  id         Int         @id @default(autoincrement())
+  title      String // 作品名字
+  genre      SeriesGenre // 作品类型，如动漫、漫画、视觉小说、游戏、轻小说等
+  characters Character[]
+
+  @@unique([id, title])
+}
+
+model Tag {
+  id         Int                @id @default(autoincrement())
+  name       String // 标签名
+  characters CharacterWithTag[]
+
+  @@unique([id, name])
+}
+
+model CharacterWithTag {
+  character   Character @relation(fields: [characterId], references: [id])
+  characterId Int
+  tag         Tag       @relation(fields: [tagId], references: [id])
+  tagId       Int
+
+  @@id([characterId, tagId])
+}
+
+model Collection {
+  id          Int                       @id @default(autoincrement())
+  name        String // 收藏夹名
+  description String? // 收藏夹描述
+  characters  CharacterWithCollection[]
+
+  @@unique([id, name])
+}
+
+model CharacterWithCollection {
+  character    Character  @relation(fields: [characterId], references: [id])
+  characterId  Int
+  collection   Collection @relation(fields: [collectionId], references: [id])
+  collectionId Int
+
+  @@id([characterId, collectionId])
+}

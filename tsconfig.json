@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@moehub/*": ["moehub/*/src"]
+    }
+  },
+  "exclude": ["tsup.config.ts"]
+}

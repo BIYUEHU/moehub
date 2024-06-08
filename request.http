@@ -1,0 +1,4 @@
+@URL = http://localhost:5000/api/
+
+GET {{URL}}character HTTP/1.1
+
