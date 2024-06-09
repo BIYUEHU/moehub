@@ -1,7 +1,8 @@
-import logger from '@kotori-bot/logger';
-import app from './app';
+import createApplication from './app';
 import config from './config';
 
+const app = createApplication();
+
 app.listen(config.port, () => {
-  logger.info(`Server is running on port ${config.port}`);
+  app.logger.info(`Server is running on port ${config.port}`);
 });

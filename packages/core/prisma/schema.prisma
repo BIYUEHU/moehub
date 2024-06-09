@@ -39,7 +39,7 @@ model Character {
   id          Int                       @id @default(autoincrement()) // 唯一标识符
   // 必要数据
   name        String // 角色名（日语原名）
-  romanized   String // 角色名罗马音
+  romaji      String // 角色名罗马音
   gender      Gender // 角色性别
   // 基本数据
   alias       String? // 角色中文名、昵称、别名（字符串数组）
@@ -53,8 +53,8 @@ model Character {
   actor       Actor?                    @relation(fields: [actorId], references: [id]) // 角色声优
   actorId     Int?
   // 关联数据
-  series      Series                    @relation(fields: [seriesId], references: [id]) // 角色所属系列作品
-  seriesId    Int
+  series      Series?                   @relation(fields: [seriesId], references: [id]) // 角色所属系列作品
+  seriesId    Int?
   collections CharacterWithCollection[] // 角色所属收藏夹
   tags        CharacterWithTag[] // 角色萌点
   // 额外数据
@@ -64,7 +64,7 @@ model Character {
   height      Int? // 角色身高
   bust        Int? // 角色胸围
   waist       Int? // 角色腰围
-  hip         String? // 角色臀围
+  hip         Int? // 角色臀围
 
   createdAt DateTime @default(now())
 
@@ -81,11 +81,11 @@ model Actor {
 
 model Series {
   id         Int         @id @default(autoincrement())
-  title      String // 作品名字
+  name       String // 作品名字
   genre      SeriesGenre // 作品类型，如动漫、漫画、视觉小说、游戏、轻小说等
   characters Character[]
 
-  @@unique([id, title])
+  @@unique([id, name])
 }
 
 model Tag {

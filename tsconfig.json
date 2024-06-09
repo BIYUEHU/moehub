@@ -4,7 +4,9 @@
     "baseUrl": ".",
     "paths": {
       "@moehub/*": ["moehub/*/src"]
-    }
+    },
+    /* for decorator metadata */
+    "emitDecoratorMetadata": true
   },
   "exclude": ["tsup.config.ts"]
 }

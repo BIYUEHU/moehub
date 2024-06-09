@@ -1,17 +1,8 @@
-@URL = http://localhost:5000/api/
-
-GET {{URL}}character/ HTTP/1.1
-
-###
-
-POST {{URL}}character/ HTTP/1.1
-Content-Type: application/json
-
 {
   "name": "有村ロミ",
   "romaji": "Arimura Romi",
   "gender": "FEMALE",
-  "alias": ["比村茜","有村路美","Himura Akane"],
+  "alias": ["比村茜", "有村路美", "Himura Akane"],
   "images": ["https://mzh.moegirl.org.cn/File:%E6%9C%89%E6%9D%91%E3%83%AD%E3%83%9F.png"],
   "url": ["https://mzh.moegirl.org.cn/%E6%9C%89%E6%9D%91%E8%B7%AF%E7%BE%8E"],
   "description": "有村路美是由GLOVETY制作的游戏《爱因斯坦携爱敬上》及其衍生作品的登场角色，女主角之一。",
@@ -25,5 +16,18 @@ Content-Type: application/json
   "bust": 77,
   "waist": 51,
   "hip": 78,
-  "tags": ["高中生","优等生","同班同学","天才少女","科学家","水手服","超短裙","四分之三袜","发夹","耳坠","贫乳","短发"]
+  "tags": [
+    "高中生",
+    "优等生",
+    "同班同学",
+    "天才少女",
+    "科学家",
+    "水手服",
+    "超短裙",
+    "四分之三袜",
+    "发夹",
+    "耳坠",
+    "贫乳",
+    "短发"
+  ]
 }

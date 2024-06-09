@@ -47,6 +47,12 @@ importers:
       '@prisma/client':
         specifier: ^5.15.0
         version: 5.15.0(prisma@5.15.0)
+      inversify:
+        specifier: ^6.0.2
+        version: 6.0.2
+      inversify-koa-utils:
+        specifier: ^1.0.0
+        version: 1.0.0
       koa:
         specifier: ^2.15.3
         version: 2.15.3
@@ -56,6 +62,12 @@ importers:
       koa-router:
         specifier: ^12.0.1
         version: 12.0.1
+      reflect-metadata:
+        specifier: ^0.2.2
+        version: 0.2.2
+      tsukiko:
+        specifier: ^1.2.6
+        version: 1.2.6
     devDependencies:
       '@types/koa':
         specifier: ^2.15.0
@@ -621,6 +633,10 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.15
     dev: true
 
+  /@kotori-bot/i18n@1.3.1:
+    resolution: {integrity: sha512-58D3WZJbfq5FBUuyZWlXTivRcObdr77Jcjl20LCUcHqO+moKtSIvdNNqmeDwfrEaoVFd4bJbMEv7/8yrXvFnOA==}
+    dev: false
+
   /@kotori-bot/logger@1.3.1:
     resolution: {integrity: sha512-/bHJvVOQdpzGJCJrg13GR3/TzVkVbbq56DGBKuENvC4EnsYfLFXxNmpkzP6e6FQS8nw/Mo6SuUVecas9xa9gxQ==}
     dependencies:
@@ -1181,7 +1197,6 @@ packages:
 
   /any-promise@1.3.0:
     resolution: {integrity: sha512-7UvmKalWRt1wgjL1RrGxoSJW/0QZFIegpeGvZG9kjp8vrRu55XTHbwnqq2GpXm9uLbcuhxm3IqX9OB4MZR1b2A==}
-    dev: true
 
   /anymatch@3.1.3:
     resolution: {integrity: sha512-KMReFUr0B4t+D+OBkjR3KYqvocp2XaSzO55UcB6mgQMd3KbcE+mWTyvVV7D/zsdEbNnV6acZUutkiHQXvTr1Rw==}
@@ -1670,7 +1685,6 @@ packages:
         optional: true
     dependencies:
       ms: 2.1.3
-    dev: true
 
   /debug@4.3.5(supports-color@5.5.0):
     resolution: {integrity: sha512-pt0bNEmneDIvdL1Xsd9oDQ/wrQRkXDT4AUWlNZNPKvW5x/jyO9VFXkJUP07vQ2upmw5PlaITaPKc31jK13V+jg==}
@@ -2590,6 +2604,19 @@ packages:
       side-channel: 1.0.6
     dev: true
 
+  /inversify-koa-utils@1.0.0:
+    resolution: {integrity: sha512-69EF8VXaKFgRTlpoGMNO/E18sq12RRf1XfQxRAw4aqUFDSHOahhLtJtQ+MExOA4DBRttiIPQT05Rp9GbkV9atw==}
+    dependencies:
+      koa: 2.15.3
+      koa-router: 7.4.0
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
+  /inversify@6.0.2:
+    resolution: {integrity: sha512-i9m8j/7YIv4mDuYXUAcrpKPSaju/CIly9AHK5jvCBeoiM/2KEsuCQTTP+rzSWWpLYWRukdXFSl6ZTk2/uumbiA==}
+    dev: false
+
   /is-array-buffer@3.0.4:
     resolution: {integrity: sha512-wcjaerHw0ydZwfhiKbXJWLDY8A7yV7KhjQOpb83hGgGfId/aQa4TOvwyzn2PuswW2gPCYEL/nEAiSVpdOj1lXw==}
     engines: {node: '>= 0.4'}
@@ -2753,6 +2780,10 @@ packages:
       call-bind: 1.0.7
     dev: true
 
+  /isarray@0.0.1:
+    resolution: {integrity: sha512-D2S+3GLxWH+uhrNEcoh/fnmYeP8E8/zHl644d/jdA0g2uyXvy3sb0qxotE+ne0LtccHknQzWwZEzhak7oJ0COQ==}
+    dev: false
+
   /isarray@2.0.5:
     resolution: {integrity: sha512-xHjhDr3cNBK0BzdUJSPXZntQUx/mwMS5Rw4A7lPJ90XGAO6ISP/ePDNuo0vhqOZU+UD5JoodwCAAoZQd3FeAKw==}
     dev: true
@@ -2841,6 +2872,12 @@ packages:
       type-is: 1.6.18
     dev: false
 
+  /koa-compose@3.2.1:
+    resolution: {integrity: sha512-8gen2cvKHIZ35eDEik5WOo8zbVp9t4cP8p4hW4uE55waxolLRexKKrqfCpwhGVppnB40jWeF8bZeTVg99eZgPw==}
+    dependencies:
+      any-promise: 1.3.0
+    dev: false
+
   /koa-compose@4.1.0:
     resolution: {integrity: sha512-8ODW8TrDuMYvXRwra/Kh7/rJo9BtOfPc6qO8eAfC80CnCvSjSl0bkRM24X6/XBBEyj0v1nRUQ1LyOy3dbqOWXw==}
     dev: false
@@ -2862,6 +2899,21 @@ packages:
       koa-compose: 4.1.0
       methods: 1.1.2
       path-to-regexp: 6.2.2
+    transitivePeerDependencies:
+      - supports-color
+    dev: false
+
+  /koa-router@7.4.0:
+    resolution: {integrity: sha512-IWhaDXeAnfDBEpWS6hkGdZ1ablgr6Q6pGdXCyK38RbzuH4LkUOpPqPw+3f8l8aTDrQmBQ7xJc0bs2yV4dzcO+g==}
+    engines: {node: '>= 4'}
+    deprecated: '**IMPORTANT 10x+ PERFORMANCE UPGRADE**: Please upgrade to v12.0.1+ as we have fixed an issue with debuglog causing 10x slower router benchmark performance, see https://github.com/koajs/router/pull/173'
+    dependencies:
+      debug: 3.2.7
+      http-errors: 1.8.1
+      koa-compose: 3.2.1
+      methods: 1.1.2
+      path-to-regexp: 1.8.0
+      urijs: 1.19.11
     transitivePeerDependencies:
       - supports-color
     dev: false
@@ -3027,7 +3079,6 @@ packages:
 
   /ms@2.1.3:
     resolution: {integrity: sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==}
-    dev: true
 
   /mz@2.7.0:
     resolution: {integrity: sha512-z81GNO7nnYMEhrGh9LeymoE4+Yr0Wn5McHIZMK5cfQCl+NDX08sCZgUc9/6MHni9IWuFLm1Z3HTCXu2z9fN62Q==}
@@ -3268,6 +3319,12 @@ packages:
       minipass: 7.1.2
     dev: true
 
+  /path-to-regexp@1.8.0:
+    resolution: {integrity: sha512-n43JRhlUKUAlibEJhPeir1ncUID16QnEjNpwzNdO3Lm4ywrBpBZ5oLD0I6br9evr1Y9JTqwRtAh7JLoOzAQdVA==}
+    dependencies:
+      isarray: 0.0.1
+    dev: false
+
   /path-to-regexp@6.2.2:
     resolution: {integrity: sha512-GQX3SSMokngb36+whdpRXE+3f9V8UzyAorlYvOGx87ufGHehNTn5lCxrKtLyZ4Yl/wEKnNnr98ZzOwwDZV5ogw==}
     dev: false
@@ -3390,6 +3447,10 @@ packages:
     dependencies:
       picomatch: 2.3.1
     dev: true
+
+  /reflect-metadata@0.2.2:
+    resolution: {integrity: sha512-urBwgfrvVP/eAyXx4hluJivBKzuEbSQs9rKWCrCkbSxNv8mxPcUZKeuoF3Uy4mJl3Lwprp6yy5/39VWigZ4K6Q==}
+    dev: false
 
   /regexp.prototype.flags@1.5.2:
     resolution: {integrity: sha512-NcDiDkTLuPR+++OCKB0nWafEmhg/Da8aUPLPMQbK+bxKKCm1/S5he+AqYa4PlMCVBalb4/yxIRub6qkEx5yJbw==}
@@ -3822,6 +3883,12 @@ packages:
     engines: {node: '>=0.6.x'}
     dev: false
 
+  /tsukiko@1.2.6:
+    resolution: {integrity: sha512-mhNoGO2W80MFhSzANCvGo+mSSUaGCF2l+75GedLx65KMkIcGKucbQFJCSaLqwffRm4Q/XKGc9zXuJK04gLKijw==}
+    dependencies:
+      '@kotori-bot/i18n': 1.3.1
+    dev: false
+
   /tsup@8.1.0(typescript@5.4.5):
     resolution: {integrity: sha512-UFdfCAXukax+U6KzeTNO2kAARHcWxmKsnvSPXUcfA1D+kU05XDccCrkffCQpFaWDsZfV0jMyTsxU39VfCp6EOg==}
     engines: {node: '>=18'}
@@ -3987,6 +4054,10 @@ packages:
     dependencies:
       punycode: 2.3.1
     dev: true
+
+  /urijs@1.19.11:
+    resolution: {integrity: sha512-HXgFDgDommxn5/bIv0cnQZsPhHDA90NPHD6+c/v21U5+Sx5hoP8+dP9IZXBU1gIfvdRfhG8cel9QNPeionfcCQ==}
+    dev: false
 
   /validate-npm-package-license@3.0.4:
     resolution: {integrity: sha512-DpKm2Ui/xN7/HQKCtpZxoRWBhZ9Z0kqtygG8XCgNQ8ZlDnxuQmWhj566j8fN4Cu3/JmbhsDo7fcAJq4s9h27Ew==}
