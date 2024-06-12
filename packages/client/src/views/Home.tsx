@@ -25,14 +25,14 @@ export default () => {
   return (
     <div>
       <h1>角色列表</h1>
-      <Flex justify="center" align="center" wrap="wrap">
+      <Flex justify="center" wrap="wrap">
         {data
           .filter((item) => item.images && item.images.length > 0)
           .map((item) => (
             <Card
               key={item.id}
               hoverable
-              style={{ width: 220, float: 'none', margin: '0.5vw' }}
+              style={{ width: 220, float: 'none', margin: '0.8vh 0.8vw' }}
               cover={
                 <Image
                   src={item.images![0]}

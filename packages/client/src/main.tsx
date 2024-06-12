@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
-// import 'antd/dist/reset.css';
+import 'antd/dist/reset.css';
 import 'tailwindcss/tailwind.css';
 import 'antd/dist/antd.min.js.LICENSE.txt';
 import './styles/index.css';

@@ -19,11 +19,7 @@ http.interceptors.response.use(
     } */
     response.data,
   (err) => {
-    console.log(err);
-
-    if (err instanceof Error) {
-      message.useMessage()[0].error(`请求错误：${err.message}`);
-    }
+    if (err instanceof Error) message.useMessage()[0].error(`请求错误：${err.message}`);
     return Promise.reject(err);
   }
 );

@@ -4,7 +4,6 @@ import React from 'react';
 const { Header, Footer, Content } = Layout;
 
 const headerStyle: React.CSSProperties = {
-  textAlign: 'center',
   color: '#fff',
   height: 64,
   paddingInline: 48,
@@ -12,37 +11,28 @@ const headerStyle: React.CSSProperties = {
 };
 
 const contentStyle: React.CSSProperties = {
-  textAlign: 'center',
   minHeight: 120,
-  lineHeight: '120px'
+  lineHeight: '120px',
+  overflow: 'initial'
 };
 
 const footerStyle: React.CSSProperties = {
-  textAlign: 'center',
   color: '#ffff',
   backgroundColor: '#333'
 };
 
-const layoutStyle = {
+const layoutStyle: React.CSSProperties = {
+  textAlign: 'center',
   borderRadius: 8,
-  overflow: 'hidden',
-  height: '100vh'
-};
-
-const layoutSecondStyle = {
-  margin: '0 auto',
-  width: 'min(85ch, 100% - 4rem)',
-  marginLine: 'auto'
+  minHeight: '100vh'
 };
 
 export default (outlet: React.ReactElement) => (
   <Flex gap="middle" wrap>
     <Layout style={layoutStyle}>
       <Header style={headerStyle}>Header</Header>
-      <Layout style={layoutSecondStyle}>
-        <Content style={contentStyle}>{outlet}</Content>
-        <Footer style={footerStyle}>Footer</Footer>
-      </Layout>
+      <Content style={contentStyle}>{outlet}</Content>
+      <Footer style={footerStyle}>Ant Design ©{new Date().getFullYear()} Created by Ant UED</Footer>
     </Layout>
   </Flex>
 );
