@@ -1,51 +1,53 @@
-import tsu from 'tsukiko';
+import Tsu from 'tsukiko';
 
-const genderSchema = tsu.Union([tsu.Union([tsu.Literal('MALE'), tsu.Literal('FEMALE')]), tsu.Literal('OTHER')]);
+const intPositive = Tsu.Number().int().positive();
 
-const bloodTypeSchema = tsu.Union([
-  tsu.Union([tsu.Literal('A'), tsu.Literal('B')]),
-  tsu.Union([tsu.Literal('AB'), tsu.Literal('O')])
-]);
+const genderSchema = Tsu.Enum(Tsu.Literal('MALE'), Tsu.Literal('FEMALE'), Tsu.Literal('OTHER'));
 
-const seriesGenreSchema = tsu.Union([
-  tsu.Union([
-    tsu.Union([tsu.Literal('ANIME'), tsu.Literal('COMIC')]),
-    tsu.Union([tsu.Literal('GALGAME'), tsu.Literal('GAME')])
-  ]),
-  tsu.Union([tsu.Literal('NOVEL'), tsu.Literal('OTHER')])
-]);
+const bloodTypeSchema = Tsu.Enum(Tsu.Literal('A'), Tsu.Literal('B'), Tsu.Literal('AB'), Tsu.Literal('O'));
 
-export const seriesSchema = tsu.Object({
-  name: tsu.String(),
+const seriesGenreSchema = Tsu.Enum(
+  Tsu.Literal('ANIME'),
+  Tsu.Literal('COMIC'),
+  Tsu.Literal('GALGAME'),
+  Tsu.Literal('GAME'),
+  Tsu.Literal('NOVEL'),
+  Tsu.Literal('OTHER')
+);
+
+export const seriesSchema = Tsu.Object({
+  name: Tsu.String(),
   genre: seriesGenreSchema
-});
+}).strict();
 
-export const collectionSchema = tsu.Object({
-  name: tsu.String(),
-  description: tsu.String().optional()
-});
+export const collectionSchema = Tsu.Object({
+  name: Tsu.String(),
+  description: Tsu.String().optional(),
+  characters: Tsu.Array(intPositive).optional()
+}).strict();
 
-export const characterSchema = tsu.Object({
-  name: tsu.String(),
-  romaji: tsu.String(),
+export const characterSchema = Tsu.Object({
+  name: Tsu.String(),
+  romaji: Tsu.String(),
   gender: genderSchema,
-  alias: tsu.Array(tsu.String()).optional(),
-  age: tsu.Number().positive().optional(),
-  images: tsu.Array(tsu.String()).optional(),
-  url: tsu.Array(tsu.String()).optional(),
-  description: tsu.String().optional(),
-  comment: tsu.String().optional(),
-  hitokoto: tsu.String().optional(),
-  birthday: tsu.Number().positive().optional(),
-  actor: tsu.String().optional(),
-  series: tsu.Number().positive().optional(),
-  collections: tsu.Array(tsu.Number().positive()).default([]),
-  tags: tsu.Array(tsu.String()).default([]),
-  hairColor: tsu.String().optional(),
-  eyeColor: tsu.String().optional(),
+  alias: Tsu.Array(Tsu.String()).optional(),
+  age: intPositive.optional(),
+  images: Tsu.Array(Tsu.String()).optional(),
+  url: Tsu.Array(Tsu.String()).optional(),
+  description: Tsu.String().optional(),
+  comment: Tsu.String().optional(),
+  hitokoto: Tsu.String().optional(),
+  birthday: intPositive.optional(),
+  voice: Tsu.String().optional(),
+  series: Tsu.String(),
+  seriesGenre: seriesGenreSchema,
+  collections: Tsu.Array(intPositive).optional(),
+  tags: Tsu.Array(Tsu.String()).optional(),
+  hairColor: Tsu.String().optional(),
+  eyeColor: Tsu.String().optional(),
   bloodType: bloodTypeSchema.optional(),
-  height: tsu.Number().positive().optional(),
-  bust: tsu.Number().positive().optional(),
-  waist: tsu.Number().positive().optional(),
-  hip: tsu.Number().positive().optional()
-});
+  height: intPositive.optional(),
+  bust: intPositive.optional(),
+  waist: intPositive.optional(),
+  hip: intPositive.optional()
+}).strict();

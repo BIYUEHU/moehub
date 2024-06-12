@@ -1,0 +1,26 @@
+{
+  "name": "@moehub/common",
+  "version": "1.0.0",
+  "description": "Moehub common package",
+  "main": "src/index.ts",
+  "license": "GPL-3.0",
+  "author": "Romi <biyuehuya@gmail.com>",
+  "keywords": [
+    "anime",
+    "character",
+    "gallery",
+    "share",
+    "acg",
+    "server",
+    "bot",
+    "web",
+    "back-end"
+  ],
+  "bugs": {
+    "url": "https://github.com/biyuehu/moehub/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/biyuehu/moehub.git"
+  }
+}

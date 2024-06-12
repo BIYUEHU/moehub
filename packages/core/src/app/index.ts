@@ -16,6 +16,8 @@ export class Application {
     this.server.setConfig((app) => {
       app.use(bodyParser());
       app.use(async (ctx, next) => {
+        ctx.accepts('application/json');
+        ctx.set('Access-Control-Allow-Origin', '*');
         const { method, url, body } = ctx.request;
         this.logger.label(method.toUpperCase()).record(url, /* headers, */ JSON.stringify(body));
         try {
@@ -23,18 +25,24 @@ export class Application {
         } catch (err) {
           if (err instanceof HttpError) {
             ctx.status = err.status;
-            ctx.body = { message: err.message };
+            ctx.body = err.message;
           } else if (err instanceof TsuError) {
             ctx.status = 400;
-            ctx.body = { message: err.message };
+            ctx.body = err.message;
           } else {
             ctx.status = 500;
-            ctx.body = { message: 'Internal Server Error' };
+            ctx.body = 'Internal Server Error';
           }
           app.emit('error', err);
         }
-
-        // if (!ctx.body) ctx.status = ctx.method.toLocaleUpperCase() === 'POST' ? 201 : 204;
+        if (ctx.status === 200) {
+          ctx.body = { data: ctx.body };
+        } else if ([201, 204].includes(ctx.status)) {
+          ctx.body = {};
+        } else if (ctx.body) {
+          ctx.body = { code: ctx.status, error: ctx.body };
+        }
+        if (ctx.body) ctx.body = { code: ctx.status, ...ctx.body };
       });
       app.on('error', (err) => {
         this.logger.error(err);

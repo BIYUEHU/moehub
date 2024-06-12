@@ -6,8 +6,8 @@
   "license": "GPL-3.0",
   "author": "Romi <biyuehuya@gmail.com>",
   "scripts": {
-    "build": "tsup",
-    "dev": "nodemon --watch",
+    "dev:core": "nodemon --watch",
+    "dev:client": "pnpm --filter @moehub/client dev",
     "lint": "eslint \"packages/*/src/*.ts\" --fix",
     "format": "prettier --config .prettierrc \"packages/*/src/*.ts\" --write",
     "version": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0"
@@ -30,6 +30,10 @@
   },
   "nodemonConfig": {
     "exec": "tsx packages/core/src",
-    "ext": "ts"
+    "ext": "ts",
+    "ignore": [
+      "packages/common",
+      "packages/client}"
+    ]
   }
 }

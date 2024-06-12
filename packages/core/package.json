@@ -32,7 +32,7 @@
     "koa-bodyparser": "^4.4.1",
     "koa-router": "^12.0.1",
     "reflect-metadata": "^0.2.2",
-    "tsukiko": "^1.2.6"
+    "tsukiko": "^1.3.1"
   },
   "devDependencies": {
     "@types/koa": "^2.15.0",

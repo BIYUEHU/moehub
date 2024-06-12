@@ -10,7 +10,13 @@ export const Symbols = {
   Auth: Symbol.for('Auth'),
   /* Router Modules */
   CharacterController: 'CharacterController',
-  CharacterService: Symbol.for('CharacterService')
+  CharacterService: Symbol.for('CharacterService'),
+  SeriesController: 'SeriesController',
+  SeriesService: Symbol.for('SeriesService'),
+  TagController: 'TagController',
+  TagService: Symbol.for('TagService'),
+  CollectionController: 'CollectionController',
+  CollectionService: Symbol.for('CollectionService')
 };
 
 export default Symbols;

@@ -50,13 +50,12 @@ model Character {
   comment     String? // 角色个人评论
   hitokoto    String? // 角色一言
   birthday    DateTime? // 角色生日
-  actor       Actor?                    @relation(fields: [actorId], references: [id]) // 角色声优
-  actorId     Int?
+  voice       String? // 角色配音
   // 关联数据
-  series      Series?                   @relation(fields: [seriesId], references: [id]) // 角色所属系列作品
-  seriesId    Int?
+  series      String
+  seriesGenre SeriesGenre
   collections CharacterWithCollection[] // 角色所属收藏夹
-  tags        CharacterWithTag[] // 角色萌点
+  tags        String? // 角色萌点（字符串数组）
   // 额外数据
   hairColor   String? // 角色发色
   eyeColor    String? // 角色瞳色
@@ -71,40 +70,6 @@ model Character {
   @@unique([id, name])
 }
 
-model Actor {
-  id         Int         @id @default(autoincrement())
-  name       String // 声优名
-  characters Character[]
-
-  @@unique([id, name])
-}
-
-model Series {
-  id         Int         @id @default(autoincrement())
-  name       String // 作品名字
-  genre      SeriesGenre // 作品类型，如动漫、漫画、视觉小说、游戏、轻小说等
-  characters Character[]
-
-  @@unique([id, name])
-}
-
-model Tag {
-  id         Int                @id @default(autoincrement())
-  name       String // 标签名
-  characters CharacterWithTag[]
-
-  @@unique([id, name])
-}
-
-model CharacterWithTag {
-  character   Character @relation(fields: [characterId], references: [id])
-  characterId Int
-  tag         Tag       @relation(fields: [tagId], references: [id])
-  tagId       Int
-
-  @@id([characterId, tagId])
-}
-
 model Collection {
   id          Int                       @id @default(autoincrement())
   name        String // 收藏夹名
@@ -115,10 +80,12 @@ model Collection {
 }
 
 model CharacterWithCollection {
+  id Int @id @default(autoincrement())
+
   character    Character  @relation(fields: [characterId], references: [id])
   characterId  Int
   collection   Collection @relation(fields: [collectionId], references: [id])
   collectionId Int
 
-  @@id([characterId, collectionId])
+  @@index([characterId, collectionId], name: "character_collection_index")
 }

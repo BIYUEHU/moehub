@@ -12,12 +12,12 @@ import {
 } from 'inversify-koa-utils';
 import { inject, injectable } from 'inversify';
 import { Symbols } from '../../container';
-import CharacterService from '../service/character.service';
+import CollectionService from '../service/collection.service';
 
-@controller('/character')
+@controller('/collection')
 @injectable()
-class CharacterController implements interfaces.Controller {
-  public constructor(@inject(Symbols.CharacterService) private readonly service: CharacterService) {}
+class CollectionController implements interfaces.Controller {
+  public constructor(@inject(Symbols.CollectionService) private readonly service: CollectionService) {}
 
   @httpGet('/:id')
   async get(@requestParam('id') id: string, @response() res: Response) {
@@ -47,4 +47,4 @@ class CharacterController implements interfaces.Controller {
   }
 }
 
-export default CharacterController;
+export default CollectionController;

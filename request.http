@@ -1,29 +1,100 @@
 @URL = http://localhost:5000/api/
 
-GET {{URL}}character/ HTTP/1.1
+## Character
 
-###
+### Query all characters
 
-POST {{URL}}character/ HTTP/1.1
+GET {{URL}}character/
+
+### Query a character by id
+
+GET {{URL}}character/2445
+
+### Create a new character
+
+POST {{URL}}character/
 Content-Type: application/json
 
 {
-  "name": "有村ロミ",
-  "romaji": "Arimura Romi",
+  "name": "夏目藍",
+  "romaji": "Natsume Ai",
   "gender": "FEMALE",
-  "alias": ["比村茜","有村路美","Himura Akane"],
-  "images": ["https://mzh.moegirl.org.cn/File:%E6%9C%89%E6%9D%91%E3%83%AD%E3%83%9F.png"],
-  "url": ["https://mzh.moegirl.org.cn/%E6%9C%89%E6%9D%91%E8%B7%AF%E7%BE%8E"],
-  "description": "有村路美是由GLOVETY制作的游戏《爱因斯坦携爱敬上》及其衍生作品的登场角色，女主角之一。",
-  "comment": "倾尽一切只为你，感性而又可爱，热烈而又长情，对理工男来说简直是梦中情人般的理想存在。",
-  "hitokoto": "当城市之中亮起灯火时，夜空的繁星便黯然失色。",
-  "birthday": 1000137600000,
-  "actor": "月野姬彩",
-  "hair": "粉发",
-  "eyeColor": "蓝瞳",
-  "height": 149,
+  "alias": ["夏目蓝", "蓝姐"],
+  "images": ["https://img.moegirl.org.cn/common/thumb/d/dd/Ai-now3.png/280px-Ai-now3.png"],
+  "url": ["https://mzh.moegirl.org.cn/%E5%A4%8F%E7%9B%AE%E8%93%9D"],
+  "description": "虽然有时看起来是个迷迷糊糊的冒失娘，但实际上直觉却相当敏锐，对包括主角在内的大家抱有极强的责任心。",
+  "comment": "陪伴是最长情的告白，而爱情则是最美好的结局。",
+  "hitokoto": "请一定要活的比我长寿，请为我送终，我不想再为我最爱的家人送终了",
+  "birthday": 998668800000,
+  "voice": "泽田夏",
+  "series": "サクラノ詩－櫻の森の上を舞う－",
+  "seriesGenre": "GALGAME",
+  "hairColor": "黑发",
+  "height": 145,
   "bust": 77,
-  "waist": 51,
-  "hip": 78,
-  "tags": ["高中生","优等生","同班同学","天才少女","科学家","水手服","超短裙","四分之三袜","发夹","耳坠","贫乳","短发"]
+  "waist": 56,
+  "hip": 76,
+  "tags": ["姐姐", "合法萝莉", "老师", "黑长直", "小姨", "心形瞳孔"]
 }
+
+
+
+
+
+
+
+### Update a character by id
+
+PUT {{URL}}character/22
+Content-Type: application/json
+
+### Delete a character by id
+
+DELETE {{URL}}character/5232
+
+## Serie
+
+### Query all series
+
+GET {{URL}}series
+
+## Tags
+
+### Query all tags
+
+GET {{URL}}tag
+
+## Collection
+
+### Query all collections
+
+GET {{URL}}collection
+
+### Query a collection by id
+
+GET {{URL}}collection/123232
+
+### Create a new collection
+
+POST {{URL}}collection/
+Content-Type: application/json
+
+{
+  "name": "co1",
+  "description": "descr..."
+}
+
+### Update a collection by id
+
+PUT {{URL}}collection/1
+Content-Type: application/json
+
+{
+  "name": "co1",
+  "description": "descr...",
+  "characters": [4, 1]
+}
+
+### Delete a collection by id
+
+DELETE {{URL}}collection/1
