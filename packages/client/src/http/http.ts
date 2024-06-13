@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { message } from 'antd';
+import { notification } from 'antd';
 import config from './config.js';
 
 const http = axios.create({
@@ -19,7 +19,11 @@ http.interceptors.response.use(
     } */
     response.data,
   (err) => {
-    if (err instanceof Error) message.useMessage()[0].error(`请求错误：${err.message}`);
+    notification.error({
+      message: 'Http request error',
+      description: err instanceof Error ? err.message : err || 'Unknown error',
+      placement: 'topRight'
+    });
     return Promise.reject(err);
   }
 );

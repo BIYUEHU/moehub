@@ -1,0 +1,22 @@
+::selection {
+  background-color: #227d51bb;
+}
+
+a {
+  color: #227d51;
+}
+
+a:hover {
+  background-color: #096148;
+}
+
+a::selection {
+  color: #333;
+  background-color: #096148;
+}
+
+.card {
+  background: none;
+  border: 1px solid #00000040;
+  border-radius: 10px;
+}

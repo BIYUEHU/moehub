@@ -1,11 +1,12 @@
 import { useRoutes } from 'react-router-dom';
-import layout from './components/layout';
+import Layout from './components/Layout';
 import router from './router';
 
 function App() {
   const outlet = useRoutes(router);
+  document.title = 'MoeHub';
 
-  return <div>{layout(outlet!)}</div>;
+  return <Layout outlet={outlet!} />;
 }
 
 export default App;

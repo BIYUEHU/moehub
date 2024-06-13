@@ -1,15 +1,17 @@
-export type MoehubGenre = 'ANIME' | 'COMIC' | 'GALGAME' | 'GAME' | 'NOVEL';
+export type MoehubGenre = 'ANIME' | 'COMIC' | 'GALGAME' | 'GAME' | 'NOVEL' | 'OTHER';
 
 export interface MoehubDataCharacter {
   id: number;
   name: string;
   alias?: string[];
   url?: string[];
+  tags?: string[];
   images?: string[];
   romaji: string;
   gender: 'MALE' | 'FEMALE' | 'OTHER';
   age: null | number;
   description: null | string;
+  birthday: null | string;
   comment: null | string;
   hitokoto: null | string;
   voice: null | string;

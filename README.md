@@ -2,6 +2,10 @@
 
 Your anime character collection gallery, easily build, freely share.
 
+## Example
+
+> [👉 There](https://hotaru.icu/moehub.html)
+
 ## Stacks
 
 - Frontend: React, tailwind-css
