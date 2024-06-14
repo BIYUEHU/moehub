@@ -31,15 +31,17 @@ const CharacterView: React.FC = () => {
   const [data, setData] = useState<null | MoehubDataCharacter>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<null | string>(null);
+  const navigate = useNavigate();
 
-  if (!characterId) {
-    useNavigate()('/', { replace: true });
-    return <></>;
-  }
+  useEffect(() => {
+    if (!characterId) {
+      navigate('/', { replace: true });
+    }
+  }, [navigate]);
 
   useEffect(() => {
     getCharacter(Number(characterId))
-      .then((data) => setData(data.data))
+      .then((res) => setData(res.data))
       .catch((error) => setError(error instanceof Error ? error.message : String(error)))
       .finally(() => setIsLoading(false));
   }, []);
@@ -54,7 +56,7 @@ const CharacterView: React.FC = () => {
     <div>
       <h1>角色详情页</h1>
       <Flex justify="center" align="center" vertical>
-        <Card hoverable className={`card ${styles.card}`}>
+        <Card hoverable className={`card cardFixed`}>
           {data.hitokoto ? <div className={styles.hitokoto}>『{data.hitokoto}』</div> : null}
           {data.images && data.images.length > 1 ? (
             <Carousel arrows infinite={false}>

@@ -6,6 +6,8 @@
   "license": "GPL-3.0",
   "author": "Romi <biyuehuya@gmail.com>",
   "scripts": {
+    "client": "pnpm --filter @moehub/client",
+    "common": "pnpm --filter @moehub/common",
     "dev:core": "nodemon --watch",
     "dev:client": "pnpm --filter @moehub/client dev",
     "lint": "eslint \"packages/*/src/*.ts\" --fix",

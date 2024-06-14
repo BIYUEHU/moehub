@@ -20,3 +20,44 @@ a::selection {
   border: 1px solid #00000040;
   border-radius: 10px;
 }
+
+.cardButton {
+  height: 40px;
+  width: 110px;
+  color: #212121 !important;
+  font-size: 1.2rem;
+  margin: 10px;
+  border: 1px solid #00000040 !important;
+  border-radius: 5px;
+}
+
+.cardButton:hover {
+  background-color: #227d51 !important;
+  color: #fff !important;
+}
+
+.cardButton a:hover {
+  background: none;
+}
+
+.cardList a {
+  background: none;
+}
+
+.cardFixed {
+  width: 1000px;
+  max-width: 95vw;
+  margin-bottom: 14px;
+}
+
+.clean {
+  background: none !important;
+}
+
+.cleanAll {
+  background: none !important;
+}
+
+.cleanAll * {
+  background: none !important;
+}

@@ -13,11 +13,10 @@ http.interceptors.request.use(
 );
 
 http.interceptors.response.use(
-  (response) =>
-    /*     if (response.status === 200 && typeof response.data === 'object' && typeof response.data.data === 'object') {
-      return response.data.data;
-    } */
-    response.data,
+  (response) => {
+    if (response.data) response.config.headers['Content-Type'] = 'application/json';
+    return response.data;
+  },
   (err) => {
     notification.error({
       message: 'Http request error',

@@ -12,11 +12,17 @@
 }
 
 .header {
+  display: flex;
+  justify-content: space-between;
   color: #eee;
   background-color: #227d51;
   height: 64px;
   padding-inline: 48px;
   line-height: 64px;
+}
+
+.header a {
+  background: none;
 }
 
 .headerTitle {

@@ -1,0 +1,9 @@
+.table {
+  max-width: 95vw;
+}
+
+.form {
+  width: 500px;
+  max-width: 95%;
+  margin: 0 auto;
+}

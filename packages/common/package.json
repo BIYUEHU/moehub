@@ -2,9 +2,12 @@
   "name": "@moehub/common",
   "version": "1.0.0",
   "description": "Moehub common package",
-  "main": "src/index.ts",
+  "main": "dist/index.js",
   "license": "GPL-3.0",
   "author": "Romi <biyuehuya@gmail.com>",
+  "scripts": {
+    "build": "tsc"
+  },
   "keywords": [
     "anime",
     "character",

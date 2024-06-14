@@ -14,7 +14,7 @@ const HomeView: React.FC = () => {
 
   useEffect(() => {
     getCharacters()
-      .then((data) => setData(data.data))
+      .then((res) => setData(res.data))
       .catch((error) => setError(error instanceof Error ? error.message : String(error)))
       .finally(() => setIsLoading(false));
   }, []);
@@ -38,24 +38,24 @@ const HomeView: React.FC = () => {
           <h2>
             <strong>关于我</strong>
           </h2>
-          <div className={styles.cardList}>
+          <div className="cardList">
             <a target="_blank" href="https://github.com/biyuehu">
-              <Button className={styles.cardButton} ghost>
+              <Button className="cardButton" ghost>
                 GitHub
               </Button>
             </a>
             <a target="_blank" href="https://hotaru.icu">
-              <Button className={styles.cardButton} ghost>
+              <Button className="cardButton" ghost>
                 个人博客
               </Button>
             </a>
             <a target="_blank" href="https://space.bilibili.com/293767574">
-              <Button className={styles.cardButton} ghost>
+              <Button className="cardButton" ghost>
                 哔哩哔哩
               </Button>
             </a>
             <a target="_blank" href="https://bgm.tv/user/himeno">
-              <Button className={styles.cardButton} ghost>
+              <Button className="cardButton" ghost>
                 班固米
               </Button>
             </a>
@@ -65,6 +65,11 @@ const HomeView: React.FC = () => {
           <h2>
             <strong>公告</strong>
           </h2>
+          <ul>
+            <li>
+              <strong>2024/6/14</strong> 网站上线
+            </li>
+          </ul>
         </Card>
 
         <Card className={`card ${styles.card}`}>
@@ -72,7 +77,8 @@ const HomeView: React.FC = () => {
             <strong>这是什么？</strong>
           </h3>
           <span>
-            <strong>MoeHub</strong>是一个开源的个人向喜爱角色收藏网站，
+            <strong>MoeHub</strong>{' '}
+            是一个开源的个人向喜爱角色收藏网站，在这里可以收集曾经经历过的故事与邂逅并令你心动的美少女。
           </span>
           <h3>
             <strong>如何创建自己的网站？</strong>

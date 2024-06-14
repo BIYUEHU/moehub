@@ -17,8 +17,14 @@ export class Application {
       app.use(bodyParser());
       app.use(async (ctx, next) => {
         ctx.accepts('application/json');
+        ctx.set('Access-Control-Allow-Methods', '*');
         ctx.set('Access-Control-Allow-Origin', '*');
+        ctx.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
         const { method, url, body } = ctx.request;
+        if (method === 'OPTIONS') {
+          ctx.status = 204;
+          return;
+        }
         this.logger.label(method.toUpperCase()).record(url, /* headers, */ JSON.stringify(body));
         try {
           await next();
