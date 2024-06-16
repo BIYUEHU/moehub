@@ -1,16 +1,39 @@
-import React from 'react';
-import { Button, Card, Collapse, DatePicker, Flex, Form, Input, InputNumber, Radio, Space, notification } from 'antd';
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import React, { useEffect, useState } from 'react';
+import {
+  Button,
+  Card,
+  Collapse,
+  DatePicker,
+  Flex,
+  Form,
+  Input,
+  InputNumber,
+  Radio,
+  Select,
+  SelectProps,
+  Space,
+  notification
+} from 'antd';
 import { MoehubDataCharacter } from '@moehub/common';
+import dayjs from 'dayjs';
 import styles from '../styles.module.css';
-import { createCharacter } from '../../../http';
+import { createCharacter, getTags } from '../../../http';
 
 const CreateView: React.FC = () => {
   const [form] = Form.useForm();
 
-  const onFinish = (values: MoehubDataCharacter) => {
-    createCharacter(values).then(() => notification.success({ message: '角色创建成功' }));
+  const onFinish = (values: Omit<MoehubDataCharacter, 'birthday'> & { birthday: dayjs.Dayjs }) => {
+    const data = { ...values, birthday: values.birthday ? new Date(values.birthday.toString()).getTime() : undefined };
+    createCharacter(data).then(() => notification.success({ message: '角色创建成功' }));
   };
+
+  const [tagOptions, setTagOptions] = useState<SelectProps['options']>([]);
+
+  useEffect(() => {
+    getTags().then(({ data }) => {
+      setTagOptions(data.map((tag) => ({ label: tag.name, value: tag.name })));
+    });
+  }, []);
 
   return (
     <div>
@@ -45,46 +68,12 @@ const CreateView: React.FC = () => {
               </Radio.Group>
             </Form.Item>
             <hr />
-            <Form.List name="alias">
-              {(fields, { add, remove }, { errors }) => (
-                <>
-                  {fields.map((field) => (
-                    <>
-                      <Form.Item {...field} rules={[{ required: true }]}>
-                        <Input />
-                      </Form.Item>
-                      <MinusCircleOutlined onClick={() => remove(field.name)} />
-                    </>
-                  ))}
-                  <Form.Item>
-                    <Button type="dashed" onClick={() => add()} icon={<PlusOutlined />}>
-                      添加别名
-                    </Button>
-                    <Form.ErrorList errors={errors} />
-                  </Form.Item>
-                </>
-              )}
-            </Form.List>
-            <Form.List name="images">
-              {(fields, { add, remove }, { errors }) => (
-                <>
-                  {fields.map((field) => (
-                    <>
-                      <Form.Item {...field} rules={[{ required: true }]}>
-                        <Input />
-                      </Form.Item>
-                      <MinusCircleOutlined onClick={() => remove(field.name)} />
-                    </>
-                  ))}
-                  <Form.Item>
-                    <Button type="dashed" onClick={() => add()} icon={<PlusOutlined />}>
-                      添加图片
-                    </Button>
-                    <Form.ErrorList errors={errors} />
-                  </Form.Item>
-                </>
-              )}
-            </Form.List>
+            <Form.Item name="alias" label="角色别名">
+              <Select mode="tags"></Select>
+            </Form.Item>
+            <Form.Item name="images" label="相关图片">
+              <Select mode="tags"></Select>
+            </Form.Item>
             <Form.Item name="description" label="描述">
               <Input />
             </Form.Item>
@@ -97,26 +86,9 @@ const CreateView: React.FC = () => {
             <Form.Item name="comment" label="个人评价">
               <Input />
             </Form.Item>
-            <Form.List name="tags">
-              {(fields, { add, remove }, { errors }) => (
-                <>
-                  {fields.map((field) => (
-                    <>
-                      <Form.Item {...field} rules={[{ required: true }]}>
-                        <Input />
-                      </Form.Item>
-                      <MinusCircleOutlined onClick={() => remove(field.name)} />
-                    </>
-                  ))}
-                  <Form.Item>
-                    <Button type="dashed" onClick={() => add()} icon={<PlusOutlined />}>
-                      添加萌点
-                    </Button>
-                    <Form.ErrorList errors={errors} />
-                  </Form.Item>
-                </>
-              )}
-            </Form.List>
+            <Form.Item name="tags" label="萌点">
+              <Select mode="tags" options={tagOptions}></Select>
+            </Form.Item>
             <hr />
             <Collapse>
               <Collapse.Panel header="其它信息" key="1">
@@ -152,27 +124,9 @@ const CreateView: React.FC = () => {
                     <Radio value="O">O 型</Radio>
                   </Radio.Group>
                 </Form.Item>
-
-                <Form.List name="url">
-                  {(fields, { add, remove }, { errors }) => (
-                    <>
-                      {fields.map((field) => (
-                        <>
-                          <Form.Item {...field} rules={[{ required: true }]}>
-                            <Input />
-                          </Form.Item>
-                          <MinusCircleOutlined onClick={() => remove(field.name)} />
-                        </>
-                      ))}
-                      <Form.Item>
-                        <Button type="dashed" onClick={() => add()} icon={<PlusOutlined />}>
-                          添加链接
-                        </Button>
-                        <Form.ErrorList errors={errors} />
-                      </Form.Item>
-                    </>
-                  )}
-                </Form.List>
+                <Form.Item name="url" label="相关链接">
+                  <Select mode="tags"></Select>
+                </Form.Item>
               </Collapse.Panel>
             </Collapse>
             <br />

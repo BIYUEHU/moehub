@@ -14,6 +14,7 @@
     "@moehub/common": "workspace:^",
     "antd": "^5.18.1",
     "axios": "^1.7.2",
+    "dayjs": "^1.11.11",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.23.1",

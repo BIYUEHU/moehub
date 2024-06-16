@@ -59,7 +59,7 @@ const CharacterView: React.FC = () => {
         <Card hoverable className={`card cardFixed`}>
           {data.hitokoto ? <div className={styles.hitokoto}>『{data.hitokoto}』</div> : null}
           {data.images && data.images.length > 1 ? (
-            <Carousel arrows infinite={false}>
+            <Carousel arrows infinite={false} autoplay>
               {data.images.map((item, index) => (
                 <Image className={styles.content} src={item} key={index} />
               ))}

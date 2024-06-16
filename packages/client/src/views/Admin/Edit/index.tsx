@@ -1,10 +1,24 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Card, Collapse, DatePicker, Flex, Form, Input, InputNumber, Radio, Space, notification } from 'antd';
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import {
+  Button,
+  Card,
+  Collapse,
+  DatePicker,
+  Flex,
+  Form,
+  Input,
+  InputNumber,
+  Radio,
+  Select,
+  SelectProps,
+  Space,
+  notification
+} from 'antd';
 import { MoehubDataCharacter } from '@moehub/common';
 import { useNavigate, useParams } from 'react-router-dom';
+import dayjs from 'dayjs';
 import styles from '../styles.module.css';
-import { getCharacter, updateCharacter } from '../../../http';
+import { getCharacter, getTags, updateCharacter } from '../../../http';
 import Loading from '../../../components/loading';
 
 const EditView: React.FC = () => {
@@ -20,14 +34,25 @@ const EditView: React.FC = () => {
 
   const [form] = Form.useForm();
 
-  const onFinish = (values: MoehubDataCharacter) => {
-    updateCharacter(Number(characterId), values).then(() => notification.success({ message: '角色编辑成功' }));
+  const onFinish = (values: Omit<MoehubDataCharacter, 'birthday'> & { birthday: dayjs.Dayjs }) => {
+    const data = { ...values, birthday: values.birthday ? new Date(values.birthday.toString()).getTime() : undefined };
+    updateCharacter(Number(characterId), data).then(() => notification.success({ message: '角色编辑成功' }));
   };
+
+  const [tagOptions, setTagOptions] = useState<SelectProps['options']>([]);
 
   useEffect(() => {
     getCharacter(Number(characterId))
-      .then((res) => form.setFieldsValue(res.data))
+      .then((res) => {
+        const { data } = res;
+        if (data.birthday) (data.birthday as unknown as dayjs.Dayjs) = dayjs(data.birthday);
+        form.setFieldsValue(data);
+      })
       .finally(() => setIsLoading(false));
+
+    getTags().then(({ data }) => {
+      setTagOptions(data.map((tag) => ({ label: tag.name, value: tag.name })));
+    });
   }, []);
 
   return (
@@ -66,46 +91,12 @@ const EditView: React.FC = () => {
                 </Radio.Group>
               </Form.Item>
               <hr />
-              <Form.List name="alias">
-                {(fields, { add, remove }, { errors }) => (
-                  <>
-                    {fields.map((field) => (
-                      <>
-                        <Form.Item {...field} rules={[{ required: true }]}>
-                          <Input />
-                        </Form.Item>
-                        <MinusCircleOutlined onClick={() => remove(field.name)} />
-                      </>
-                    ))}
-                    <Form.Item>
-                      <Button type="dashed" onClick={() => add()} icon={<PlusOutlined />}>
-                        添加别名
-                      </Button>
-                      <Form.ErrorList errors={errors} />
-                    </Form.Item>
-                  </>
-                )}
-              </Form.List>
-              <Form.List name="images">
-                {(fields, { add, remove }, { errors }) => (
-                  <>
-                    {fields.map((field) => (
-                      <>
-                        <Form.Item {...field} rules={[{ required: true }]}>
-                          <Input />
-                        </Form.Item>
-                        <MinusCircleOutlined onClick={() => remove(field.name)} />
-                      </>
-                    ))}
-                    <Form.Item>
-                      <Button type="dashed" onClick={() => add()} icon={<PlusOutlined />}>
-                        添加图片
-                      </Button>
-                      <Form.ErrorList errors={errors} />
-                    </Form.Item>
-                  </>
-                )}
-              </Form.List>
+              <Form.Item name="alias" label="角色别名">
+                <Select mode="tags"></Select>
+              </Form.Item>
+              <Form.Item name="images" label="相关图片">
+                <Select mode="tags"></Select>
+              </Form.Item>
               <Form.Item name="description" label="描述">
                 <Input />
               </Form.Item>
@@ -118,26 +109,9 @@ const EditView: React.FC = () => {
               <Form.Item name="comment" label="个人评价">
                 <Input />
               </Form.Item>
-              <Form.List name="tags">
-                {(fields, { add, remove }, { errors }) => (
-                  <>
-                    {fields.map((field) => (
-                      <>
-                        <Form.Item {...field} rules={[{ required: true }]}>
-                          <Input />
-                        </Form.Item>
-                        <MinusCircleOutlined onClick={() => remove(field.name)} />
-                      </>
-                    ))}
-                    <Form.Item>
-                      <Button type="dashed" onClick={() => add()} icon={<PlusOutlined />}>
-                        添加萌点
-                      </Button>
-                      <Form.ErrorList errors={errors} />
-                    </Form.Item>
-                  </>
-                )}
-              </Form.List>
+              <Form.Item name="tags" label="萌点">
+                <Select mode="tags" options={tagOptions}></Select>
+              </Form.Item>
               <hr />
               <Collapse>
                 <Collapse.Panel header="其它信息" key="1">
@@ -173,27 +147,9 @@ const EditView: React.FC = () => {
                       <Radio value="O">O 型</Radio>
                     </Radio.Group>
                   </Form.Item>
-
-                  <Form.List name="url">
-                    {(fields, { add, remove }, { errors }) => (
-                      <>
-                        {fields.map((field) => (
-                          <>
-                            <Form.Item {...field} rules={[{ required: true }]}>
-                              <Input />
-                            </Form.Item>
-                            <MinusCircleOutlined onClick={() => remove(field.name)} />
-                          </>
-                        ))}
-                        <Form.Item>
-                          <Button type="dashed" onClick={() => add()} icon={<PlusOutlined />}>
-                            添加链接
-                          </Button>
-                          <Form.ErrorList errors={errors} />
-                        </Form.Item>
-                      </>
-                    )}
-                  </Form.List>
+                  <Form.Item name="url" label="相关链接">
+                    <Select mode="tags"></Select>
+                  </Form.Item>
                 </Collapse.Panel>
               </Collapse>
               <br />

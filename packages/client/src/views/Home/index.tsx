@@ -67,6 +67,7 @@ const HomeView: React.FC = () => {
           </h2>
           <ul>
             <li>
+              <strong>2024/6/16</strong> 修了点 bug，更改了标签表单样式
               <strong>2024/6/14</strong> 网站上线
             </li>
           </ul>
@@ -90,8 +91,10 @@ const HomeView: React.FC = () => {
       </Flex>
       <h1>角色列表</h1>
       <Flex justify="center" wrap>
+        {/* TODO: custom sort method */}
         {data
           .filter((item) => item.images && item.images.length > 0)
+          .reverse()
           .map((item) => (
             <Card
               key={item.id}

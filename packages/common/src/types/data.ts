@@ -32,6 +32,10 @@ export interface MoehubDataCharacter {
   }[];
 }
 
+export type MoehubDataCharacterSubmit = Omit<MoehubDataCharacter, 'id' | 'createdAt' | 'birthday'> & {
+  birthday?: number;
+};
+
 export interface MoehubDataSeries {
   name: string;
   genre: MoehubGenre;
