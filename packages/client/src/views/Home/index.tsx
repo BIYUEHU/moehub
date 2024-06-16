@@ -68,6 +68,8 @@ const HomeView: React.FC = () => {
           <ul>
             <li>
               <strong>2024/6/16</strong> 修了点 bug，更改了标签表单样式
+            </li>
+            <li>
               <strong>2024/6/14</strong> 网站上线
             </li>
           </ul>
