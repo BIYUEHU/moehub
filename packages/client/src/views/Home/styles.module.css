@@ -11,11 +11,18 @@
 
 .characterImage {
   width: 200px;
-  height: 300px;
+  height: 300px !important;
   object-fit: cover;
 }
 
 .characterCard {
   width: 220px;
+  max-height: 520px;
   margin: 0.8vh 0.8vw;
+}
+
+.characterList {
+  margin: 10px auto;
+  width: 1320px;
+  max-width: 95vw;
 }

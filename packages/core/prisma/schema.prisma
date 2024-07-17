@@ -41,10 +41,14 @@ model Character {
   name        String // 角色名（日语原名）
   romaji      String // 角色名罗马音
   gender      Gender // 角色性别
+  color       String? // 角色主色
+  order       Int                       @default(50) // 角色排序
+  hide        Boolean                   @default(false) // 是否隐藏角色
   // 基本数据
   alias       String? // 角色中文名、昵称、别名（字符串数组）
   age         Int? // 角色年龄
   images      String? // 角色相关图片（字符串数组）
+  songId      Int? // 角色歌曲ID
   url         String? // 角色相关链接（字符串数组）
   description String? // 角色描述
   comment     String? // 角色个人评论
@@ -61,6 +65,7 @@ model Character {
   eyeColor    String? // 角色瞳色
   bloodType   bloodType? // 角色血型
   height      Int? // 角色身高
+  weight      Int? // 角色体重
   bust        Int? // 角色胸围
   waist       Int? // 角色腰围
   hip         Int? // 角色臀围
@@ -88,4 +93,10 @@ model CharacterWithCollection {
   collectionId Int
 
   @@index([characterId, collectionId], name: "character_collection_index")
+}
+
+model Settings {
+  id    Int    @id @default(autoincrement())
+  key   String
+  value String
 }

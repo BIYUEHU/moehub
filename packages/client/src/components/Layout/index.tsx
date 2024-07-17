@@ -1,38 +1,59 @@
-import { Flex, Layout as AntLayout, Avatar, Image } from 'antd';
-import { LoginOutlined } from '@ant-design/icons';
-import { Link } from 'react-router-dom';
-import styles from './styles.module.css';
+import { Flex, Layout as AntLayout, Avatar, Image } from 'antd'
+import { LoginOutlined } from '@ant-design/icons'
+import { Link, useNavigate } from 'react-router-dom'
+import styles from './styles.module.css'
+import { useEffect } from 'react'
+import Store from '@/store'
 
-const { Header, Footer, Content } = AntLayout;
+interface LayoutProps {
+  title: string
+  outlet: React.ReactElement
+  isPrivate?: boolean
+}
 
-const Layout: React.FC<{ outlet: React.ReactElement }> = ({ outlet }) => (
-  <>
-    <div className={styles.background}></div>
-    <Flex gap="middle" wrap>
-      <AntLayout className={styles.layout}>
-        <Header className={styles.header}>
-          <h1>
-            <Link className={styles.headerTitle} to="/">
-              <Avatar style={{ marginRight: 10 }} src={<Image src="https://biyuehu.github.io/images/avatar.png" />} />
-              Moe Hub
+const Layout: React.FC<LayoutProps> = ({ title, outlet, isPrivate }) => {
+  document.title = title
+
+  if (isPrivate) {
+    const navigate = useNavigate()
+
+    useEffect(() => {
+      if (Store.get('login') !== 'yes') navigate('./login', { replace: true })
+    }, [navigate])
+  }
+
+  return (
+    <>
+      <div className={styles.background} />
+      <Flex gap="middle" wrap>
+        <AntLayout className={styles.layout}>
+          <AntLayout.Header className={styles.header}>
+            <h1>
+              <Link className={styles.headerTitle} to="/">
+                <Avatar
+                  onClick={() => {}}
+                  style={{ marginRight: 10 }}
+                  src="https://biyuehu.github.io/images/avatar.png"
+                />
+                Moe Hub
+              </Link>
+            </h1>
+            <Link to="/admin">
+              <Avatar style={{ background: 'none', color: '#eee' }} icon={<LoginOutlined />} />
             </Link>
-          </h1>
+          </AntLayout.Header>
+          <AntLayout.Content className={styles.content}>{outlet}</AntLayout.Content>
+          <AntLayout.Footer className={styles.footer}>
+            Made with ❤ By{' '}
+            <a href="https://github.com/biyuehu" target="_blank" rel="noreferrer">
+              Arimura Sena
+            </a>{' '}
+            In © 2024
+          </AntLayout.Footer>
+        </AntLayout>
+      </Flex>
+    </>
+  )
+}
 
-          <Link to="/admin">
-            <Avatar style={{ background: 'none', color: '#eee' }} icon={<LoginOutlined />} />
-          </Link>
-        </Header>
-        <Content className={styles.content}>{outlet}</Content>
-        <Footer className={styles.footer}>
-          Made with ❤ By{' '}
-          <a href="https://github.com/biyuehu" target="_blank">
-            Arimura Sena
-          </a>{' '}
-          In © 2024
-        </Footer>
-      </AntLayout>
-    </Flex>
-  </>
-);
-
-export default Layout;
+export default Layout

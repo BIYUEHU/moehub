@@ -1,3 +1,9 @@
+import { LoggerLevel } from '@kotori-bot/logger'
+import dotenv from 'dotenv'
+
+dotenv.config()
+
 export default {
-  port: 5000,
-};
+  port: Number(process.env.PORT) ?? 5000,
+  logLevel: Number(process.env.LOG_LEVEL) ?? LoggerLevel.DEBUG
+}

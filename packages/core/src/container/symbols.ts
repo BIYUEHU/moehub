@@ -16,7 +16,9 @@ export const Symbols = {
   TagController: 'TagController',
   TagService: Symbol.for('TagService'),
   CollectionController: 'CollectionController',
-  CollectionService: Symbol.for('CollectionService')
-};
+  CollectionService: Symbol.for('CollectionService'),
+  SettingsController: 'SettingsController',
+  SettingsService: Symbol.for('SettingsService')
+}
 
-export default Symbols;
+export default Symbols

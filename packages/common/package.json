@@ -25,5 +25,8 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/biyuehu/moehub.git"
+  },
+  "dependencies": {
+    "tsukiko": "^1.3.1"
   }
 }

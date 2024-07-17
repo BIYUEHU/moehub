@@ -1,36 +1,34 @@
-import { Button, Card, Flex, Form, Input, notification } from 'antd';
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import Store from '../../../store';
-import styles from '../styles.module.css';
+import { Button, Card, Flex, Form, Input, notification } from 'antd'
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { LockOutlined, UserOutlined } from '@ant-design/icons'
+import Store from '@/store'
+import styles from '../styles.module.css'
 
 interface LoginData {
-  username: string;
-  password: string;
+  username: string
+  password: string
 }
 
 const LoginView: React.FC = () => {
-  const [loginSuccess, setLoginSuccess] = useState(false);
-  const navigate = useNavigate();
+  const [loginSuccess, setLoginSuccess] = useState(false)
+  const navigate = useNavigate()
 
   useEffect(() => {
-    if (Store.get('login') === 'yes') {
-      navigate('./', { replace: true });
-    }
-  }, [navigate, loginSuccess]);
+    if (Store.get('login') === 'yes' || loginSuccess) navigate('./', { replace: true })
+  }, [navigate, loginSuccess])
 
-  const [form] = Form.useForm();
+  const [form] = Form.useForm()
 
-  const onFinish = ({ username, password }: LoginData) => {
+  function onFinish({ username, password }: LoginData) {
     if (username === 'ArimuraSena' && password === '123456') {
-      Store.set('login', 'yes');
-      notification.success({ message: '登录成功' });
-      setLoginSuccess(true);
-      return;
+      Store.set('login', 'yes')
+      notification.success({ message: '登录成功' })
+      setLoginSuccess(true)
+      return
     }
-    notification.error({ message: '用户名或密码错误' });
-  };
+    notification.error({ message: '用户名或密码错误' })
+  }
 
   return (
     <div>
@@ -56,7 +54,7 @@ const LoginView: React.FC = () => {
         </Card>
       </Flex>
     </div>
-  );
-};
+  )
+}
 
-export default LoginView;
+export default LoginView

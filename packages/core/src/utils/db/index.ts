@@ -1,41 +1,42 @@
-import { PrismaClient } from '@prisma/client';
-import { inject, injectable } from 'inversify';
-import { ParserInfer } from 'tsukiko';
-import { Symbols } from '../../container';
-import { characterSchema } from '../../router/schema';
+import type { PrismaClient } from '@prisma/client'
+import { inject, injectable } from 'inversify'
+import type { MoehubDataCharacterInCollection, MoehubDataCharacterSubmit } from '@moehub/common'
+import { Symbols } from '../../container'
 
 @injectable()
 export class Database {
-  private static client?: PrismaClient;
+  private static client?: PrismaClient
 
-  public readonly character: PrismaClient['character'];
+  public readonly character: PrismaClient['character']
 
-  public readonly characterWithCollection: PrismaClient['characterWithCollection'];
+  public readonly characterWithCollection: PrismaClient['characterWithCollection']
 
-  public readonly collection: PrismaClient['collection'];
+  public readonly collection: PrismaClient['collection']
+
+  public readonly settings: PrismaClient['settings']
 
   public constructor(@inject(Symbols.DatabaseFactory) prismaFactory: () => PrismaClient) {
-    if (!Database.client) Database.client = prismaFactory();
-    const { character, characterWithCollection, collection } = Database.client;
-    this.character = character;
-    this.characterWithCollection = characterWithCollection;
-    this.collection = collection;
+    if (!Database.client) Database.client = prismaFactory()
+    this.character = Database.client.character
+    this.characterWithCollection = Database.client.characterWithCollection
+    this.collection = Database.client.collection
+    this.settings = Database.client.settings
   }
 
   public characterDataParse(
     data: ReturnType<Database['character']['findFirst']> extends Promise<infer T> ? Exclude<T, null> : never
-  ) {
+  ): MoehubDataCharacterInCollection {
     return {
       ...data,
       alias: data.alias?.split('|'),
       url: data.url?.split('|'),
       images: data.images?.split('|'),
-      birthday: data.birthday ? data.birthday.toISOString() : undefined,
+      birthday: data.birthday ? data.birthday.getTime() : undefined,
       tags: data.tags?.split('|')
-    };
+    }
   }
 
-  public characterDataStringify(data: ParserInfer<typeof characterSchema>) {
+  public characterDataStringify(data: MoehubDataCharacterSubmit) {
     return {
       ...data,
       alias: data.alias?.join('|'),
@@ -43,7 +44,7 @@ export class Database {
       images: data.images?.join('|'),
       birthday: data.birthday ? new Date(data.birthday) : undefined,
       tags: data.tags?.join('|')
-    };
+    }
   }
   /* 
   public cleanFromCharacter(characterId: number, collectionId: number) {
@@ -56,4 +57,4 @@ export class Database {
   } */
 }
 
-export default Database;
+export default Database

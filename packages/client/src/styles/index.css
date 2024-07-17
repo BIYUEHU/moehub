@@ -16,7 +16,7 @@ a::selection {
 }
 
 .card {
-  background: none;
+  background: #ffffff63;
   border: 1px solid #00000040;
   border-radius: 10px;
 }
@@ -60,4 +60,10 @@ a::selection {
 
 .cleanAll * {
   background: none !important;
+}
+
+.cardForm {
+  width: 500px;
+  max-width: 95%;
+  margin: 0 auto;
 }

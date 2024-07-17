@@ -1,21 +1,26 @@
-import { inject, injectable } from 'inversify';
-import { Symbols } from '../../container';
-import CharacterService from './character.service';
+import { inject, injectable } from 'inversify'
+import { Symbols } from '../../container'
+import type CharacterService from './character.service'
+import type { MoehubDataTag } from '@moehub/common'
 
 @injectable()
 export class TagService {
   public constructor(@inject(Symbols.CharacterService) private readonly service: CharacterService) {}
 
-  private readonly counter: Map<string, number> = new Map();
+  private readonly counter: Map<string, number> = new Map()
 
-  private setCount(tag: string[]) {
-    tag.forEach((tag) => this.counter.set(tag, (this.counter.get(tag) || 0) + 1));
+  private setCount(tags: string[]) {
+    for (const tag of tags) {
+      this.counter.set(tag, (this.counter.get(tag) || 0) + 1)
+    }
   }
 
-  public async getAll() {
-    (await this.service.getAll()).forEach((c) => c?.tags && this.setCount(c.tags));
-    return Array.from(this.counter.entries()).map(([name, characters]) => ({ name, characters }));
+  public async getAll(): Promise<MoehubDataTag[]> {
+    for (const c of await this.service.getAll()) {
+      if (c?.tags) this.setCount(c.tags)
+    }
+    return Array.from(this.counter.entries()).map(([name, characters]) => ({ name, characters }))
   }
 }
 
-export default TagService;
+export default TagService

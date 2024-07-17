@@ -1,12 +1,21 @@
-import { useRoutes } from 'react-router-dom';
-import Layout from './components/Layout';
-import router from './router';
+import { HashRouter, Route, Routes } from 'react-router-dom'
+import Layout from '@/components/Layout'
+import routes from './routes'
 
 function App() {
-  const outlet = useRoutes(router);
-  document.title = 'MoeHub';
-
-  return <Layout outlet={outlet!} />;
+  return (
+    <HashRouter>
+      <Routes>
+        {routes.map((route) => (
+          <Route
+            key={route.path}
+            path={route.path}
+            element={<Layout title={route.title} outlet={route.component} isPrivate={route.isPrivate} />}
+          />
+        ))}
+      </Routes>
+    </HashRouter>
+  )
 }
 
-export default App;
+export default App

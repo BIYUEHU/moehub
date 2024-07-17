@@ -1,18 +1,19 @@
-import { Response } from 'koa';
+import type { Response } from 'koa'
 import {
   controller,
   httpDelete,
   httpGet,
   httpPost,
   httpPut,
-  interfaces,
+  type interfaces,
   requestBody,
   requestParam,
   response
-} from 'inversify-koa-utils';
-import { inject, injectable } from 'inversify';
-import { Symbols } from '../../container';
-import CharacterService from '../service/character.service';
+} from 'inversify-koa-utils'
+import { inject, injectable } from 'inversify'
+import { Symbols } from '../../container'
+import type CharacterService from '../service/character.service'
+import { characterSchema } from '@moehub/common'
 
 @controller('/character')
 @injectable()
@@ -21,30 +22,32 @@ class CharacterController implements interfaces.Controller {
 
   @httpGet('/:id')
   async get(@requestParam('id') id: string, @response() res: Response) {
-    res.body = await this.service.get(Number(id));
+    res.body = await this.service.get(Number(id))
   }
 
   @httpGet('/')
   async getAll(@response() res: Response) {
-    res.body = await this.service.getAll();
+    res.body = await this.service.getAll()
   }
 
   @httpPost('/')
   async post(@requestBody() body: unknown, @response() res: Response) {
-    res.status = await this.service.create(body);
+    const data = characterSchema.parse(body)
+    res.status = await this.service.create(data)
   }
 
   @httpPut('/:id')
   async put(@requestParam('id') id: string, @requestBody() body: unknown, @response() res: Response) {
-    await this.service.update(Number(id), body);
-    res.status = 204;
+    const data = characterSchema.parse(body)
+    await this.service.update(Number(id), data)
+    res.status = 204
   }
 
   @httpDelete('/:id')
   async delete(@requestParam('id') id: string, @response() res: Response) {
-    await this.service.remove(Number(id));
-    res.status = 204;
+    await this.service.remove(Number(id))
+    res.status = 204
   }
 }
 
-export default CharacterController;
+export default CharacterController

@@ -1,29 +1,35 @@
-import { Flex, Image, Card, Button } from 'antd';
-import React, { useEffect, useState } from 'react';
-import { MoehubDataCharacter } from '@moehub/common';
-import { Link } from 'react-router-dom';
-import { getCharacters } from '../../http/index';
-import Loading from '../../components/loading';
-import ErrorResult from '../../components/result/error';
-import styles from './styles.module.css';
+import { Flex, Image, Card, Button } from 'antd'
+import React from 'react'
+import { Link } from 'react-router-dom'
+import { getCharacters } from '@/http/index'
+import Loading from '@/components/Loading'
+import ErrorResult from '@/components/result/error'
+import styles from './styles.module.css'
+import useSWR from 'swr'
+
+function renderLinkBlock(link: string, text: string) {
+  return (
+    <a href={link} target="_blank" rel="noreferrer">
+      <Button className="cardButton" ghost>
+        {text}
+      </Button>
+    </a>
+  )
+}
+
+function renderTimeline(date: string, content: string) {
+  return (
+    <li>
+      <strong>{date}</strong> {content}
+    </li>
+  )
+}
 
 const HomeView: React.FC = () => {
-  const [data, setData] = useState<null | MoehubDataCharacter[]>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<null | string>(null);
+  const { data, error, isLoading } = useSWR('/api/character', getCharacters)
 
-  useEffect(() => {
-    getCharacters()
-      .then((res) => setData(res.data))
-      .catch((error) => setError(error instanceof Error ? error.message : String(error)))
-      .finally(() => setIsLoading(false));
-  }, []);
-
-  if (isLoading) return <Loading />;
-
-  if (error || data === null) return <ErrorResult />;
-
-  const { Meta } = Card;
+  if (isLoading) return <Loading />
+  if (error || !data) return <ErrorResult />
 
   return (
     <div>
@@ -39,39 +45,28 @@ const HomeView: React.FC = () => {
             <strong>关于我</strong>
           </h2>
           <div className="cardList">
-            <a target="_blank" href="https://github.com/biyuehu">
-              <Button className="cardButton" ghost>
-                GitHub
-              </Button>
-            </a>
-            <a target="_blank" href="https://hotaru.icu">
-              <Button className="cardButton" ghost>
-                个人博客
-              </Button>
-            </a>
-            <a target="_blank" href="https://space.bilibili.com/293767574">
-              <Button className="cardButton" ghost>
-                哔哩哔哩
-              </Button>
-            </a>
-            <a target="_blank" href="https://bgm.tv/user/himeno">
-              <Button className="cardButton" ghost>
-                班固米
-              </Button>
-            </a>
+            {[
+              ['GitHub', 'https://github.com/biyuehu'],
+              ['个人博客', 'https://hotaru.icu'],
+              ['哔哩哔哩', 'https://space.bilibili.com/293767574'],
+              ['班固米', 'https://bgm.tv/user/himeno']
+            ].map(([text, link], index) => (
+              <React.Fragment key={Number(index)}>{renderLinkBlock(link, text)}</React.Fragment>
+            ))}
           </div>
         </Card>
+
         <Card className={`card ${styles.card}`}>
           <h2>
-            <strong>公告</strong>
+            <strong>时间线</strong>
           </h2>
           <ul>
-            <li>
-              <strong>2024/6/16</strong> 修了点 bug，更改了标签表单样式
-            </li>
-            <li>
-              <strong>2024/6/14</strong> 网站上线
-            </li>
+            {[
+              ['2024/6/16', '网站上线'],
+              ['2024/6/14', '网站上线']
+            ].map(([date, content], index) => (
+              <React.Fragment key={Number(index)}>{renderTimeline(date, content)}</React.Fragment>
+            ))}
           </ul>
         </Card>
 
@@ -91,29 +86,45 @@ const HomeView: React.FC = () => {
           </span>
         </Card>
       </Flex>
+
       <h1>角色列表</h1>
-      <Flex justify="center" wrap>
+      <Flex justify="center" wrap className={styles.characterList}>
         {/* TODO: custom sort method */}
         {data
-          .filter((item) => item.images && item.images.length > 0)
+          .filter((item) => !!item.images && item.images.length > 0)
           .reverse()
           .map((item) => (
             <Card
               key={item.id}
               hoverable
               className={`card ${styles.characterCard}`}
-              cover={<Image src={item.images![0]} className={styles.characterImage} alt={item.romaji} />}
+              cover={
+                <Image
+                  src={(item.images as Exclude<typeof item.images, undefined>)[0]}
+                  className={styles.characterImage}
+                  alt={item.romaji}
+                />
+              }
             >
               <br />
               <span>{}</span>
               <Link to={`/character/${item.id}`}>
-                <Meta title={item.name} description={item.description} />
+                <Card.Meta
+                  title={item.name}
+                  description={
+                    item.description
+                      ? item.description.length > 70
+                        ? `${item.description.slice(0, 67)} ...`
+                        : item.description
+                      : ''
+                  }
+                />
               </Link>
             </Card>
           ))}
       </Flex>
     </div>
-  );
-};
+  )
+}
 
-export default HomeView;
+export default HomeView

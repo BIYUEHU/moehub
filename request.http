@@ -37,12 +37,6 @@ Content-Type: application/json
   "tags": ["姐姐", "合法萝莉", "老师", "黑长直", "小姨", "心形瞳孔"]
 }
 
-
-
-
-
-
-
 ### Update a character by id
 
 PUT {{URL}}character/22
@@ -98,3 +92,9 @@ Content-Type: application/json
 ### Delete a collection by id
 
 DELETE {{URL}}collection/1
+
+### Get all settings
+
+GET {{URL}}settings
+
+### Update settings

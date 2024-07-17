@@ -11,3 +11,38 @@
   height: 200px !important;
   object-fit: cover;
 }
+
+.characterNameCard {
+  max-width: 200px;
+  max-height: 150px;
+  margin: 20px auto;
+}
+
+.characterNameCard * {
+  margin: 0;
+  padding: 0;
+}
+
+.characterNameCard *:first-child {
+  font-size: 1.7rem;
+  font-weight: bold;
+}
+
+.characterNameCard *:last-child {
+  font-size: 1rem;
+  font-weight: normal;
+}
+
+.infoCard {
+  background: none !important;
+  box-shadow: none !important;
+  padding: 5px;
+  margin: auto;
+  width: 650px;
+  max-width: 95%;
+}
+
+.infoCard * {
+  padding: 5px !important;
+  border: none !important;
+}

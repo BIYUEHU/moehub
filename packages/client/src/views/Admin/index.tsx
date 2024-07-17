@@ -1,33 +1,26 @@
-import { MoehubDataCharacter } from '@moehub/common';
-import { Button, Card, Flex, Popconfirm, Space, Table, notification } from 'antd';
-import Column from 'antd/es/table/Column';
-import ColumnGroup from 'antd/es/table/ColumnGroup';
-import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { deleteCharacter, getCharacters } from '../../http';
-import Loading from '../../components/loading';
-import ErrorResult from '../../components/result/error';
-import styles from './styles.module.css';
-import Store from '../../store';
+import type { MoehubDataCharacter } from '@moehub/common'
+import { Button, Card, Flex, Popconfirm, Space, Table, notification } from 'antd'
+import Column from 'antd/es/table/Column'
+import ColumnGroup from 'antd/es/table/ColumnGroup'
+import { useEffect } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { deleteCharacter, getCharacters } from '@/http'
+import Loading from '@/components/Loading'
+import ErrorResult from '@/components/result/error'
+import styles from './styles.module.css'
+import Store from '@/store'
+import useSWR from 'swr'
 
 const AdminView: React.FC = () => {
-  const [data, setData] = useState<null | MoehubDataCharacter[]>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<null | string>(null);
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (Store.get('login') !== 'yes') {
-      navigate('./login', { replace: true });
+      navigate('./login', { replace: true })
     }
-  }, [navigate]);
+  }, [navigate])
 
-  useEffect(() => {
-    getCharacters()
-      .then((data) => setData(data.data))
-      .catch((error) => setError(error instanceof Error ? error.message : String(error)))
-      .finally(() => setIsLoading(false));
-  }, []);
+  const { data, isLoading } = useSWR('/api/character', getCharacters)
 
   return (
     <div>
@@ -47,15 +40,8 @@ const AdminView: React.FC = () => {
           </Flex>
         </Card>
         <Card hoverable className="card cardFixed" style={{ margin: 10 }}>
-          {/* eslint-disable-next-line no-nested-ternary */}
-          {isLoading || error ? (
-            isLoading ? (
-              <Loading />
-            ) : (
-              <ErrorResult />
-            )
-          ) : (
-            <Table dataSource={data!} className={`${styles.table} cleanAll`}>
+          {data ? (
+            <Table dataSource={data.map((data) => ({ ...data, key: data.id }))} className={`${styles.table} cleanAll`}>
               <ColumnGroup title="角色名">
                 <Column title="原名" dataIndex="name" key="name" />
                 <Column title="罗马音" dataIndex="romaji" key="romaji" />
@@ -81,17 +67,21 @@ const AdminView: React.FC = () => {
                       okText="Yes"
                       cancelText="No"
                     >
-                      <a>删除</a>
+                      <span>删除</span>
                     </Popconfirm>
                   </Space>
                 )}
               />
             </Table>
+          ) : isLoading ? (
+            <Loading />
+          ) : (
+            <ErrorResult />
           )}
         </Card>
       </Flex>
     </div>
-  );
-};
+  )
+}
 
-export default AdminView;
+export default AdminView

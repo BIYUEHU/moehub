@@ -8,7 +8,7 @@
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  background-image: url('https://himeno-sena.com/pic3.jpg');
+  background-image: url('https://himeno-sena.com/pic10.jpg');
 }
 
 .header {
@@ -36,6 +36,7 @@
 }
 
 .footer {
+  margin-top: 20px;
   color: #eee;
   background-color: #333;
 }
@@ -44,5 +45,5 @@
   text-align: center;
   border-radius: 8px;
   min-height: 100vh;
-  background-color: #ffffffc0;
+  background-color: #ffffff77;
 }

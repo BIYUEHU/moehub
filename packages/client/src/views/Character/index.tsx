@@ -1,16 +1,25 @@
-import { Card, Carousel, Descriptions, Flex, Image } from 'antd';
-import React, { ReactElement, useEffect, useState } from 'react';
-import { MoehubDataCharacter } from '@moehub/common';
-import { useNavigate, useParams } from 'react-router-dom';
-import { getCharacter } from '../../http/index';
-import Loading from '../../components/loading';
-import ErrorResult from '../../components/result/error';
-import styles from './styles.module.css';
+import { Card, Carousel, Descriptions, Flex, Image, Tag } from 'antd'
+import { useParams } from 'react-router-dom'
+import Loading from '@/components/Loading'
+import ErrorResult from '@/components/result/error'
+import styles from './styles.module.css'
+import useSWR from 'swr'
+import { getCharacter } from '@/http'
+
+interface InfoCardProps {
+  children: React.ReactNode
+  title: string
+}
+
+function getRandomColor() {
+  const list = ['magenta', 'red', 'volcano', 'orange', 'gold', 'lime', 'green', 'cyan', 'blue', 'geekblue', 'purple']
+  return list[Math.floor(Math.random() * list.length)]
+}
 
 const GenderReflect = {
   MALE: '男性',
   OTHER: '其它/未知'
-};
+}
 
 const SeriesGenreReflect = {
   ANIME: '动画',
@@ -19,114 +28,97 @@ const SeriesGenreReflect = {
   GAME: '游戏',
   NOVEL: '轻小说',
   OTHER: '其它'
-};
-
-function RenderDescriptionItem(value: unknown, label: string, callback?: () => string | ReactElement | ReactElement[]) {
-  if (value === false || value === null || value === undefined) return null;
-  return <Descriptions.Item label={label}>{callback ? callback() : String(value)}</Descriptions.Item>;
 }
 
+const InfoCard: React.FC<InfoCardProps> = ({ title, children }) => (
+  <Card title={title} bordered={false} className={styles.infoCard}>
+    {children}
+  </Card>
+)
+
 const CharacterView: React.FC = () => {
-  const { id: characterId } = useParams();
-  const [data, setData] = useState<null | MoehubDataCharacter>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<null | string>(null);
-  const navigate = useNavigate();
+  const { id: characterId } = useParams()
+  const { data, error, isLoading } = useSWR(`/api/character/${characterId}`, () => getCharacter(Number(characterId)))
 
-  useEffect(() => {
-    if (!characterId) {
-      navigate('/', { replace: true });
-    }
-  }, [navigate]);
+  if (isLoading) return <Loading />
+  if (error || !data) return <ErrorResult />
 
-  useEffect(() => {
-    getCharacter(Number(characterId))
-      .then((res) => setData(res.data))
-      .catch((error) => setError(error instanceof Error ? error.message : String(error)))
-      .finally(() => setIsLoading(false));
-  }, []);
-
-  if (isLoading) return <Loading />;
-
-  if (error || data === null) return <ErrorResult />;
-
-  document.title = `${data.name} - MoeHub`;
+  document.title = `${data.name} - MoeHub`
 
   return (
     <div>
       <h1>角色详情页</h1>
       <Flex justify="center" align="center" vertical>
-        <Card hoverable className={`card cardFixed`}>
+        <Card hoverable className="card cardFixed">
           {data.hitokoto ? <div className={styles.hitokoto}>『{data.hitokoto}』</div> : null}
           {data.images && data.images.length > 1 ? (
-            <Carousel arrows infinite={false} autoplay>
+            <Carousel arrows draggable fade infinite autoplay>
               {data.images.map((item, index) => (
-                <Image className={styles.content} src={item} key={index} />
+                <Image className={styles.content} src={item} key={Number(index)} />
               ))}
             </Carousel>
           ) : null}
           {data.images && data.images.length === 1 ? <Image className={styles.content} src={data.images[0]} /> : null}
-          <Descriptions layout="vertical" title="角色信息">
-            <Descriptions.Item label="角色名">{data.name}</Descriptions.Item>
-            <Descriptions.Item label="罗马音">{data.romaji}</Descriptions.Item>
-            {RenderDescriptionItem(
-              data.gender !== 'FEMALE',
-              '性别',
-              () => GenderReflect[data.gender as 'MALE' | 'OTHER']
+          <div className={styles.characterNameCard} style={data.color ? { color: data.color } : {}}>
+            <div>{data.name}</div>
+            <div>{data.romaji}</div>
+          </div>
+          <Descriptions layout="vertical" title="详细信息">
+            {data.gender !== 'FEMALE' && (
+              <Descriptions.Item label="性别">{GenderReflect[data.gender]}</Descriptions.Item>
             )}
-            {RenderDescriptionItem(data.alias, '别名', () =>
-              data.alias!.map((item, index) => (
-                <React.Fragment key={index}>{item + (index === data.alias!.length - 1 ? '' : '、')}</React.Fragment>
-              ))
-            )}
-            {RenderDescriptionItem(data.age, '年龄')}
-            {RenderDescriptionItem(
-              data.birthday,
-              '出生日期',
-              () => `${new Date(data.birthday!).getMonth() + 1}月${new Date(data.birthday!).getDate()}日`
+            {data.alias && <Descriptions.Item label="别名">{data.alias.join('、')}</Descriptions.Item>}
+            {data.age && <Descriptions.Item label="年龄">{data.age}</Descriptions.Item>}
+            {data.birthday && (
+              <Descriptions.Item label="出生日期">
+                {new Date(data.birthday).getMonth() + 1}月{new Date(data.birthday).getDate()}日
+              </Descriptions.Item>
             )}
             <Descriptions.Item label="来源作品">{data.series}</Descriptions.Item>
             <Descriptions.Item label="作品类型">{SeriesGenreReflect[data.seriesGenre]}</Descriptions.Item>
-          </Descriptions>
-          <Descriptions layout="vertical" title="详细信息">
-            {RenderDescriptionItem(data.tags, '萌点', () =>
-              data.tags!.map((item, index) => (
-                <React.Fragment key={index}>{item + (index === data.tags!.length - 1 ? '' : '、')}</React.Fragment>
-              ))
-            )}
-            {RenderDescriptionItem(data.description, '描述')}
-            {RenderDescriptionItem(data.voice, '声优')}
-            {RenderDescriptionItem(data.bloodType, '血型', () => `${data.bloodType} 型`)}
-            {RenderDescriptionItem(data.height, '身高', () => `${data.height}cm`)}
-            {RenderDescriptionItem([data.bust, data.waist, data.hip].filter((el) => el).length > 0, '三围', () => {
-              let content = '';
-              if (data.bust) content += `B${data.bust}`;
-              if (data.waist) content += `${data.bust ? `/` : ``}W${data.waist}`;
-              if (data.hip) content += `${data.bust || data.waist ? `/` : ``}H${data.hip}`;
-              return content;
-            })}
-            {RenderDescriptionItem(data.hairColor, '发色')}
-            {RenderDescriptionItem(data.eyeColor, '瞳色')}
-          </Descriptions>
-          <Descriptions layout="vertical" title="其他">
-            {RenderDescriptionItem(data.comment, '个人评价')}
-            {RenderDescriptionItem(data.url, '相关链接', () =>
-              data.url!.map((item, index) => (
-                <>
-                  <br />
-                  <li key={index}>
-                    <a target="_blank" href={item}>
-                      {item.length > 30 ? `${item.slice(0, 30)}...` : item}
-                    </a>
-                  </li>
-                </>
-              ))
+
+            {data.voice && <Descriptions.Item label="声优">{data.voice}</Descriptions.Item>}
+            {data.bloodType && <Descriptions.Item label="血型">{data.bloodType} 型</Descriptions.Item>}
+            {data.height && <Descriptions.Item label="身高">{data.height}cm</Descriptions.Item>}
+            {data.weight && <Descriptions.Item label="体重">{data.weight}kg</Descriptions.Item>}
+            {(data.bust || data.waist || data.hip) && (
+              <Descriptions.Item label="三围">
+                {(() => {
+                  let content = ''
+                  if (data.bust) content += `B${data.bust}`
+                  if (data.waist) content += `${data.bust ? '/' : ''}W${data.waist}`
+                  if (data.hip) content += `${data.bust || data.waist ? '/' : ''}H${data.hip}`
+                  return content
+                })()}
+              </Descriptions.Item>
             )}
           </Descriptions>
+          {data.description && <InfoCard title="我是谁">{data.description}</InfoCard>}
+          {data.tags && data.tags.length > 0 && (
+            <InfoCard title="我的萌点">
+              {data.tags.map((value, index) => (
+                <Tag key={Number(index)} color={getRandomColor()}>
+                  {value}
+                </Tag>
+              ))}
+            </InfoCard>
+          )}
+          {data.comment ? <InfoCard title="站长评价">{data.comment}</InfoCard> : null}
+          {data.url && data.url.length > 0 && (
+            <InfoCard title="相关链接">
+              {(data.url as string[]).map((item, index) => (
+                <li key={Number(index)}>
+                  <a href={item} target="_blank" rel="noreferrer">
+                    {item.length > 30 ? `${item.slice(0, 30)}...` : item}
+                  </a>
+                </li>
+              ))}
+            </InfoCard>
+          )}
         </Card>
       </Flex>
     </div>
-  );
-};
+  )
+}
 
-export default CharacterView;
+export default CharacterView
