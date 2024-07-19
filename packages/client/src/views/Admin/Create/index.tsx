@@ -1,13 +1,17 @@
 import { Card, Flex, notification } from 'antd'
-import type { MoehubDataCharacter } from '@moehub/common'
-import type dayjs from 'dayjs'
 import { createCharacter } from '@/http'
-import CharacterForm from '@/components/CharacterForm'
+import CharacterForm, { handleMoehubDataCharacter } from '@/components/CharacterForm'
+import type { MoehubDataCharacterHandle } from '@/components/CharacterForm'
+import { useNavigate } from 'react-router-dom'
 
 const CreateView: React.FC = () => {
-  function onSubmit(values: Omit<MoehubDataCharacter, 'birthday'> & { birthday: dayjs.Dayjs }) {
-    const data = { ...values, birthday: values.birthday ? new Date(values.birthday.toString()).getTime() : undefined }
-    createCharacter(data).then(() => notification.success({ message: '角色创建成功' }))
+  const navigate = useNavigate()
+
+  function onSubmit(values: MoehubDataCharacterHandle) {
+    createCharacter(handleMoehubDataCharacter(values)).then(() => {
+      notification.success({ message: '角色创建成功' })
+      setTimeout(() => navigate(0), 500)
+    })
   }
 
   return (

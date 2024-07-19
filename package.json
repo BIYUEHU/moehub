@@ -29,11 +29,8 @@
     "node": ">=17.9.0"
   },
   "nodemonConfig": {
-    "exec": "tsx packages/core/src",
+    "exec": "pnpm common build && tsx packages/core/src",
     "ext": "ts",
-    "ignore": [
-      "packages/common",
-      "packages/client"
-    ]
+    "ignore": ["packages/common", "packages/client"]
   }
 }

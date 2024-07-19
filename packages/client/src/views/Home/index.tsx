@@ -6,6 +6,8 @@ import Loading from '@/components/Loading'
 import ErrorResult from '@/components/result/error'
 import styles from './styles.module.css'
 import useSWR from 'swr'
+import { getSettings } from '@/store/settingsReducer'
+import { useSelector } from 'react-redux'
 
 function renderLinkBlock(link: string, text: string) {
   return (
@@ -27,6 +29,7 @@ function renderTimeline(date: string, content: string) {
 
 const HomeView: React.FC = () => {
   const { data, error, isLoading } = useSWR('/api/character', getCharacters)
+  const { home_description, home_buttons, home_timeline, home_custom } = useSelector(getSettings)
 
   if (isLoading) return <Loading />
   if (error || !data) return <ErrorResult />
@@ -36,75 +39,48 @@ const HomeView: React.FC = () => {
       <h1>主页</h1>
       <Flex justify="center" wrap>
         <Card className={`card ${styles.card}`}>
-          <span>
-            欢迎来到 Arimura Sena の角色收藏网站~
-            <br />
-            角色列表会定期不断更新，欢迎关注！
-          </span>
+          {/* biome-ignore lint: */}
+          <span dangerouslySetInnerHTML={{ __html: home_description }} />
           <h2>
             <strong>关于我</strong>
           </h2>
           <div className="cardList">
-            {[
-              ['GitHub', 'https://github.com/biyuehu'],
-              ['个人博客', 'https://hotaru.icu'],
-              ['哔哩哔哩', 'https://space.bilibili.com/293767574'],
-              ['班固米', 'https://bgm.tv/user/himeno']
-            ].map(([text, link], index) => (
+            {home_buttons.map(([text, link], index) => (
               <React.Fragment key={Number(index)}>{renderLinkBlock(link, text)}</React.Fragment>
             ))}
           </div>
         </Card>
-
         <Card className={`card ${styles.card}`}>
           <h2>
             <strong>时间线</strong>
           </h2>
           <ul>
-            {[
-              ['2024/6/16', '网站上线'],
-              ['2024/6/14', '网站上线']
-            ].map(([date, content], index) => (
-              <React.Fragment key={Number(index)}>{renderTimeline(date, content)}</React.Fragment>
-            ))}
+            {Array.from(home_timeline)
+              .reverse()
+              .map(([date, content], index) => (
+                <React.Fragment key={Number(index)}>{renderTimeline(date, content)}</React.Fragment>
+              ))}
           </ul>
         </Card>
 
         <Card className={`card ${styles.card}`}>
-          <h3>
-            <strong>这是什么？</strong>
-          </h3>
-          <span>
-            <strong>MoeHub</strong>{' '}
-            是一个开源的个人向喜爱角色收藏网站，在这里可以收集曾经经历过的故事与邂逅并令你心动的美少女。
-          </span>
-          <h3>
-            <strong>如何创建自己的网站？</strong>
-          </h3>
-          <span>
-            请前往 <a href="https://github.com/biyuehu/moehub">GitHub</a> 了解详情。
-          </span>
+          {/* biome-ignore lint: */}
+          <div dangerouslySetInnerHTML={{ __html: home_custom }} />
         </Card>
       </Flex>
 
       <h1>角色列表</h1>
       <Flex justify="center" wrap className={styles.characterList}>
-        {/* TODO: custom sort method */}
         {data
-          .filter((item) => !!item.images && item.images.length > 0)
+          .filter((item) => Array.isArray(item.images) && item.images.length > 0)
           .reverse()
+          .sort((a, b) => a.order - b.order)
           .map((item) => (
             <Card
               key={item.id}
               hoverable
               className={`card ${styles.characterCard}`}
-              cover={
-                <Image
-                  src={(item.images as Exclude<typeof item.images, undefined>)[0]}
-                  className={styles.characterImage}
-                  alt={item.romaji}
-                />
-              }
+              cover={<Image src={(item.images as string[])[0]} className={styles.characterImage} alt={item.romaji} />}
             >
               <br />
               <span>{}</span>

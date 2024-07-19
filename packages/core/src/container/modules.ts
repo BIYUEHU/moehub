@@ -3,7 +3,10 @@ import { InversifyKoaServer, TYPE, type interfaces } from 'inversify-koa-utils'
 import { PrismaClient } from '@prisma/client'
 import Logging from '@kotori-bot/logger'
 import { Symbols } from './symbols'
-import database from '../utils/db'
+import { type AdapterClass, Core, Symbols as KotoriSymbols, Service } from '@kotori-bot/core'
+import CmdAdapter, { config as cmdConfig } from '@kotori-bot/kotori-plugin-adapter-cmd'
+import Database from '../utils/db'
+import Bot from '../utils/bot'
 import Logger from '../utils/logger'
 import CharacterController from '../router/controller/character.controller'
 import CharacterService from '../router/service/character.service'
@@ -16,6 +19,12 @@ import CollectionController from '../router/controller/collection.controller'
 import SettingsController from '../router/controller/settings.controller'
 import SettingsService from '../router/service/settings.service'
 
+declare module '@kotori-bot/core' {
+  interface Context {
+    pdb: Service & Database
+  }
+}
+
 const commonContainerModule = new ContainerModule((bind) => {
   /* Server Module */
   bind(Symbols.ServerFactory).toFactory(
@@ -23,9 +32,41 @@ const commonContainerModule = new ContainerModule((bind) => {
       (...args: ConstructorParameters<typeof InversifyKoaServer>) =>
         new InversifyKoaServer(...args)
   )
+  /* Bot Module */
+  bind(Symbols.BotFactory).toFactory(
+    () =>
+      (
+        kotoriConfig: ConstructorParameters<typeof Core>[0],
+        pdb: Database,
+        botConfig: ConstructorParameters<typeof CmdAdapter>[1],
+        identity: string
+      ) => {
+        const kotori = new Core(kotoriConfig)
+        kotori[KotoriSymbols.adapter].set('cmd', [CmdAdapter as unknown as AdapterClass, cmdConfig])
+
+        /* Construct kotori service by Proxy and bind Prisma database to Kotori instance */
+        kotori.service(
+          'pdb',
+          new Proxy(new (class extends Service {})(kotori, {}, 'pdb'), {
+            get: (target, prop, receiver) => {
+              if (!(prop in pdb)) return Reflect.get(target, prop, receiver)
+              const value = pdb[prop as keyof Database]
+              return typeof value === 'function' ? value.bind(pdb) : value
+            }
+          })
+        )
+        kotori.inject('pdb')
+
+        const bot = new CmdAdapter(kotori, botConfig, identity)
+        bot.start()
+
+        return kotori
+      }
+  )
+  bind(Symbols.Bot).to(Bot)
   /* Database Module */
   bind(Symbols.DatabaseFactory).toFactory(() => () => new PrismaClient())
-  bind(Symbols.Database).to(database)
+  bind(Symbols.Database).to(Database)
   /* Logger Module */
   bind(Symbols.LoggerFactory).toFactory(
     () =>

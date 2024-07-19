@@ -5,6 +5,9 @@ import ErrorResult from '@/components/result/error'
 import styles from './styles.module.css'
 import useSWR from 'swr'
 import { getCharacter } from '@/http'
+import { useSelector } from 'react-redux'
+import { getSettings } from '@/store/settingsReducer'
+import { useEffect } from 'react'
 
 interface InfoCardProps {
   children: React.ReactNode
@@ -39,11 +42,14 @@ const InfoCard: React.FC<InfoCardProps> = ({ title, children }) => (
 const CharacterView: React.FC = () => {
   const { id: characterId } = useParams()
   const { data, error, isLoading } = useSWR(`/api/character/${characterId}`, () => getCharacter(Number(characterId)))
+  const { site_title } = useSelector(getSettings)
+
+  useEffect(() => {
+    if (data) document.title = `${data.name} - ${site_title}`
+  }, [data, site_title])
 
   if (isLoading) return <Loading />
   if (error || !data) return <ErrorResult />
-
-  document.title = `${data.name} - MoeHub`
 
   return (
     <div>
@@ -51,6 +57,18 @@ const CharacterView: React.FC = () => {
       <Flex justify="center" align="center" vertical>
         <Card hoverable className="card cardFixed">
           {data.hitokoto ? <div className={styles.hitokoto}>『{data.hitokoto}』</div> : null}
+          {data.songId ? (
+            <>
+              <br />
+              <iframe
+                title="主题曲"
+                width="330"
+                height="86"
+                src={`https://music.163.com/outchain/player?auto=1&type=2&id=${data.songId}&height=66`}
+              />
+              <br />
+            </>
+          ) : null}
           {data.images && data.images.length > 1 ? (
             <Carousel arrows draggable fade infinite autoplay>
               {data.images.map((item, index) => (
@@ -59,7 +77,7 @@ const CharacterView: React.FC = () => {
             </Carousel>
           ) : null}
           {data.images && data.images.length === 1 ? <Image className={styles.content} src={data.images[0]} /> : null}
-          <div className={styles.characterNameCard} style={data.color ? { color: data.color } : {}}>
+          <div className={styles.characterNameCard} style={data.color ? { color: `#${data.color}` } : {}}>
             <div>{data.name}</div>
             <div>{data.romaji}</div>
           </div>

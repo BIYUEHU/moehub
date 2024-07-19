@@ -2,6 +2,8 @@ export const Symbols = {
   Application: Symbol.for('Application'),
   /* Common Modules */
   ServerFactory: Symbol.for('Factory<Server>'),
+  BotFactory: Symbol.for('Factory<Bot>'),
+  Bot: Symbol.for('Bot'),
   DatabaseFactory: Symbol.for('Factory<Database>'),
   Database: Symbol.for('Database'),
   LoggerFactory: Symbol.for('Factory<Logger>'),

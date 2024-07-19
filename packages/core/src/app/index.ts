@@ -5,6 +5,7 @@ import { inject, injectable } from 'inversify'
 import type { InversifyKoaServer } from 'inversify-koa-utils'
 import { TsuError } from '@moehub/common'
 import container, { Symbols } from '../container'
+import type Bot from '../utils/bot'
 import type Logger from '../utils/logger'
 import HttpError from './error'
 
@@ -60,14 +61,18 @@ export class Application {
 
   public readonly instance: Koa
 
+  public readonly bot: Bot
+
   public readonly listen: Koa['listen']
 
   public constructor(
     @inject(Symbols.ServerFactory)
     serverFactory: (...args: ConstructorParameters<typeof InversifyKoaServer>) => InversifyKoaServer,
+    @inject(Symbols.Bot) bot: Bot,
     @inject(Symbols.Logger) logger: Logger
   ) {
     this.server = serverFactory(container, undefined, { rootPath: '/api' })
+    this.bot = bot
     this.logger = logger
 
     this.initialize()

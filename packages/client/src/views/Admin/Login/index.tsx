@@ -1,9 +1,10 @@
 import { Button, Card, Flex, Form, Input, notification } from 'antd'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { LockOutlined, UserOutlined } from '@ant-design/icons'
-import Store from '@/store'
 import styles from '../styles.module.css'
+import { useDispatch, useSelector } from 'react-redux'
+import { isLoggedIn, login } from '@/store/adminReducer'
 
 interface LoginData {
   username: string
@@ -11,20 +12,20 @@ interface LoginData {
 }
 
 const LoginView: React.FC = () => {
-  const [loginSuccess, setLoginSuccess] = useState(false)
   const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const isLogged = useSelector(isLoggedIn)
 
   useEffect(() => {
-    if (Store.get('login') === 'yes' || loginSuccess) navigate('./', { replace: true })
-  }, [navigate, loginSuccess])
+    if (isLogged) navigate('/admin')
+  }, [navigate, isLogged])
 
-  const [form] = Form.useForm()
+  const [form] = Form.useForm<LoginData>()
 
   function onFinish({ username, password }: LoginData) {
     if (username === 'ArimuraSena' && password === '123456') {
-      Store.set('login', 'yes')
+      dispatch(login())
       notification.success({ message: '登录成功' })
-      setLoginSuccess(true)
       return
     }
     notification.error({ message: '用户名或密码错误' })
@@ -32,7 +33,7 @@ const LoginView: React.FC = () => {
 
   return (
     <div>
-      <h1>登录后台</h1>
+      <h1>后台登录</h1>
       <Flex justify="center" align="center" vertical>
         <Card hoverable className="card cardFixed cleanAll">
           <Form form={form} name="horizontal_login" className={styles.form} onFinish={onFinish}>
@@ -44,11 +45,9 @@ const LoginView: React.FC = () => {
             </Form.Item>
             <br />
             <Form.Item shouldUpdate>
-              {() => (
-                <Button type="primary" htmlType="submit" className="cardButton">
-                  登录
-                </Button>
-              )}
+              <Button type="primary" htmlType="submit" className="cardButton">
+                登录
+              </Button>
             </Form.Item>
           </Form>
         </Card>

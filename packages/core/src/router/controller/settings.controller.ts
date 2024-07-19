@@ -18,7 +18,7 @@ class SettingsController implements interfaces.Controller {
   @httpPut('/')
   async put(@requestBody() body: unknown, @response() res: Response) {
     const data = settingsSchema.parse(body)
-    this.service.update(data)
+    await this.service.update(data)
     res.status = 204
   }
 }

@@ -15,11 +15,6 @@ const seriesGenreSchema = Tsu.Enum(
   Tsu.Literal('OTHER')
 )
 
-// export const seriesSchema = Tsu.Object({
-//   name: Tsu.String(),
-//   genre: seriesGenreSchema
-// }).strict()
-
 export const collectionSchema = Tsu.Object({
   name: Tsu.String(),
   description: Tsu.String().optional(),
@@ -52,25 +47,29 @@ export const characterSchema = Tsu.Object({
   weight: intPositive.optional(),
   bust: intPositive.optional(),
   waist: intPositive.optional(),
-  hip: intPositive.optional()
+  hip: intPositive.optional(),
+  order: Tsu.Number().int().min(0).default(50)
 }).strict()
 
 export const settingsSchema = Tsu.Object({
   site_title: Tsu.String().optional(),
   site_name: Tsu.String().optional(),
   site_url: Tsu.String().optional(),
-  site_description: Tsu.String().optional(),
+  site_backgrounds: Tsu.Array(Tsu.String()).optional(),
+  site_logo: Tsu.String().optional(),
+  home_description: Tsu.String().optional(),
+  home_buttons: Tsu.Array(Tsu.Tuple([Tsu.String(), Tsu.String()])).optional(),
+  home_timeline: Tsu.Array(Tsu.Tuple([Tsu.String(), Tsu.String()])).optional(),
+  home_custom: Tsu.String().optional(),
   admin_username: Tsu.String().optional(),
   admin_email: Tsu.String().optional(),
-  site_keywords: Tsu.String().optional(),
-  logo_url: Tsu.String().optional(),
-  favicon_url: Tsu.String().optional(),
+  custom_head_code: Tsu.String().optional(),
+  custom_foot_code: Tsu.String().optional(),
   google_analytics_id: Tsu.String().optional(),
   smtp_host: Tsu.String().optional(),
   smtp_port: Tsu.Number().int().range(1, 65535).optional(),
   smtp_email: Tsu.String().optional(),
   smtp_key: Tsu.String().optional(),
   smtp_name: Tsu.String().optional(),
-  birthdays: Tsu.Boolean().optional(),
-  site_backgrounds: Tsu.Array(Tsu.String()).optional()
+  birthdays: Tsu.Boolean().optional()
 }).strict()

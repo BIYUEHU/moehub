@@ -8,7 +8,17 @@
   "scripts": {
     "dev": "tsx src"
   },
-  "keywords": ["anime", "character", "gallery", "share", "acg", "server", "bot", "web", "back-end"],
+  "keywords": [
+    "anime",
+    "character",
+    "gallery",
+    "share",
+    "acg",
+    "server",
+    "bot",
+    "web",
+    "back-end"
+  ],
   "bugs": {
     "url": "https://github.com/biyuehu/moehub/issues"
   },
@@ -17,6 +27,8 @@
     "url": "git+https://github.com/biyuehu/moehub.git"
   },
   "dependencies": {
+    "@kotori-bot/core": "^1.5.1",
+    "@kotori-bot/kotori-plugin-adapter-cmd": "^1.1.0",
     "@kotori-bot/logger": "^1.3.1",
     "@moehub/common": "workspace:^",
     "@prisma/client": "^5.15.0",

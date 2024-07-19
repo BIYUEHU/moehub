@@ -96,7 +96,7 @@ model CharacterWithCollection {
 }
 
 model Settings {
-  id    Int    @id @default(autoincrement())
+  id    Int     @id @default(autoincrement())
   key   String
-  value String
+  value String? @db.LongText
 }

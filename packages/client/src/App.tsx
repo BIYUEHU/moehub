@@ -1,10 +1,10 @@
-import { HashRouter, Route, Routes } from 'react-router-dom'
+import { HashRouter as Router, Route, Routes } from 'react-router-dom'
 import Layout from '@/components/Layout'
 import routes from './routes'
 
 function App() {
   return (
-    <HashRouter>
+    <Router>
       <Routes>
         {routes.map((route) => (
           <Route
@@ -14,7 +14,7 @@ function App() {
           />
         ))}
       </Routes>
-    </HashRouter>
+    </Router>
   )
 }
 

@@ -23,46 +23,52 @@ const routes: RouteConfig[] = [
   {
     path: '/',
     component: lazyLoader(() => import('@/views/Home')),
-    title: '首页 | Moehub'
+    title: '首页'
   },
   {
     path: '/character/:id',
     component: lazyLoader(() => import('@/views/Character')),
-    title: '角色详情 | Moehub'
+    title: '角色详情'
   },
   {
     path: '/about',
     component: lazyLoader(() => import('@/views/About')),
-    title: '关于 | Moehub'
+    title: '关于'
   },
   {
     path: '/admin',
     component: lazyLoader(() => import('@/views/Admin')),
-    title: '仪表盘 | Moehub',
+    title: '管理中心',
     isPrivate: true
   },
   {
     path: '/admin/login',
     component: lazyLoader(() => import('@/views/Admin/Login')),
-    title: '登录 | Moehub'
+    title: '后台登录'
   },
   {
     path: '/admin/settings',
 
     component: lazyLoader(() => import('@/views/Admin/Settings')),
-    title: '设置 | Moehub',
+    title: '系统设置',
+    isPrivate: true
+  },
+  {
+    path: '/admin/list',
+    component: lazyLoader(() => import('@/views/Admin/List')),
+    title: '角色列表',
     isPrivate: true
   },
   {
     path: '/admin/create',
     component: lazyLoader(() => import('@/views/Admin/Create')),
-    title: '角色创建 | Moehub',
+    title: '角色创建',
     isPrivate: true
   },
   {
     path: '/admin/edit/:id',
     component: lazyLoader(() => import('@/views/Admin/Edit')),
-    title: '角色编辑 | Moehub',
+    title: '角色编辑',
     isPrivate: true
   }
 ]
