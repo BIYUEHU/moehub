@@ -10,7 +10,7 @@ class SeriesController implements interfaces.Controller {
   public constructor(@inject(Symbols.SeriesService) private readonly service: SeriesService) {}
 
   @httpGet('/')
-  async getAll(@response() res: Response) {
+  public async getAll(@response() res: Response) {
     res.body = await this.service.getAll()
   }
 }

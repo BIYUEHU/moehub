@@ -34,7 +34,7 @@ const ListView: React.FC = () => {
                 key="name"
                 render={(_, { id }: MoehubDataCharacter) => (
                   <Space size="middle">
-                    <Link to={`./edit/${id}`}>编辑</Link>
+                    <Link to={`/admin/edit/${id}`}>编辑</Link>
                     <Popconfirm
                       title="删除角色"
                       description="确定要删除这个角色吗?"

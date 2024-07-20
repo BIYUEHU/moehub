@@ -1,7 +1,16 @@
+import { createHash, randomUUID } from 'node:crypto'
+import type {
+  MoehubDataLogin,
+  MoehubDataUpdateLoginSubmit,
+  MoehubDataLoginSubmit,
+  MoehubDataSettings,
+  MoehubDataSettingsSubmit
+} from '@moehub/common'
 import { inject, injectable } from 'inversify'
 import { Symbols } from '../../container'
 import type Database from '../../utils/db'
-import type { MoehubDataSettings, MoehubDataSettingsSubmit } from '@moehub/common'
+import type Auth from '../../utils/auth'
+import HttpError from '../../app/error'
 
 @injectable()
 export class SettingsService {
@@ -15,9 +24,25 @@ export class SettingsService {
     return !!this.cache && !!this.lastFetchTime && Date.now() - this.lastFetchTime < this.cacheDuration
   }
 
-  public constructor(@inject(Symbols.Database) private readonly db: Database) {}
+  public encodePassword(password: string, salt = randomUUID().replaceAll('-', '')) {
+    return { salt, encode: createHash('sha256').update(`${password}${salt}`).digest('hex') }
+  }
 
-  public async get(): Promise<MoehubDataSettings> {
+  private async getPayload(data: MoehubDataLoginSubmit) {
+    const email = (await this.db.settings.findFirst({ where: { key: 'admin_email' } }))?.value
+    if (!email || email !== data.email) return null
+    const passwordEncode = (await this.db.settings.findFirst({ where: { key: 'admin_password' } }))?.value
+    const salt = (await this.db.settings.findFirst({ where: { key: 'admin_salt' } }))?.value
+    if (!passwordEncode || !salt || this.encodePassword(data.password, salt).encode !== passwordEncode) return null
+    return { email }
+  }
+
+  public constructor(
+    @inject(Symbols.Database) private readonly db: Database,
+    @inject(Symbols.Auth) private readonly auth: Auth
+  ) {}
+
+  public async get(isVerified: boolean): Promise<MoehubDataSettings> {
     if (this.isCacheValid()) return this.cache as Exclude<typeof this.cache, undefined>
 
     const handle = (value: string | null) =>
@@ -25,6 +50,22 @@ export class SettingsService {
 
     const result: MoehubDataSettingsSubmit = {}
     for (const { key, value } of await this.db.settings.findMany()) {
+      if (['admin_salt', 'admin_password'].includes(key)) continue
+      if (
+        !isVerified &&
+        [
+          'admin_email',
+          'admin_username',
+          'smtp_host',
+          'smtp_port',
+          'smtp_email',
+          'smtp_key',
+          'smtp_name',
+          'smtp_template',
+          'birthdays'
+        ].includes(key)
+      )
+        continue
       switch (key) {
         case 'birthdays':
           result.birthdays = value === 'on'
@@ -73,11 +114,38 @@ export class SettingsService {
       home_timeline: data.home_timeline ? data.home_timeline.map((item) => item.join(',')).join('|') : undefined
     } as Record<keyof typeof data, string | undefined>
 
+    const tasks: Promise<unknown>[] = []
+
     for (const key in handleData) {
+      if (['admin_salt', 'admin_password'].includes(key)) continue
       if (handleData[key as keyof typeof handleData] === undefined) continue
       const value = handleData[key as keyof typeof handleData] as unknown as string
-      await this.db.settings.updateMany({ where: { key }, data: { key, value } })
+      tasks.push(this.db.settings.updateMany({ where: { key }, data: { key, value } }))
     }
+
+    await Promise.all(tasks)
+  }
+
+  public async login(data: MoehubDataLoginSubmit): Promise<MoehubDataLogin> {
+    const payload = await this.getPayload(data)
+    if (!payload) throw new HttpError('email or password is incorrect', 401)
+    return { token: this.auth.createToken(payload) }
+  }
+
+  public async updateLogin(data: MoehubDataUpdateLoginSubmit, email: string) {
+    if (!(await this.getPayload({ email, password: data.oldPassword })))
+      throw new HttpError('email or password is incorrect', 401)
+    const { encode, salt } = this.encodePassword(data.newPassword)
+    await Promise.all([
+      this.db.settings.updateMany({
+        where: { key: 'admin_password' },
+        data: { key: 'admin_password', value: encode }
+      }),
+      this.db.settings.updateMany({
+        where: { key: 'admin_salt' },
+        data: { key: 'admin_salt', value: salt }
+      })
+    ])
   }
 }
 

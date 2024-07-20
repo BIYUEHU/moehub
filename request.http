@@ -80,7 +80,7 @@ Content-Type: application/json
 
 ### Update a collection by id
 
-PUT {{URL}}collection/1
+PUT {{URL}}collection/12
 Content-Type: application/json
 
 {
@@ -96,5 +96,26 @@ DELETE {{URL}}collection/1
 ### Get all settings
 
 GET {{URL}}settings
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1lQGhvdGFydS5pY3UiLCJpYXQiOjE3MjE0ODAzNzUsImV4cCI6MTcyMjA4NTE3NX0.WeE4o5cZIn_e5Y_imLlcZ_3lGZ3Rvs2YkzxYDLjQ8Qw
 
 ### Update settings
+
+### Login
+
+POST {{URL}}settings/login
+Content-Type: application/json
+
+{
+  "email": "me@hotaru.icu",
+  "password": "123456"
+}
+
+### Login reset
+
+PUT {{URL}}settings/login
+Content-Type: application/json
+
+{
+  "email": "me@hotaru.icu",
+  "password": "123456"
+}

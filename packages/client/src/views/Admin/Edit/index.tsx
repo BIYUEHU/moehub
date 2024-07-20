@@ -12,10 +12,9 @@ const EditView: React.FC = () => {
 
   const { data, error } = useSWR(`/api/character/${characterId}`, () => getCharacter(Number(characterId)))
 
-  function onSubmit(values: MoehubDataCharacterHandle) {
-    updateCharacter(Number(characterId), handleMoehubDataCharacter(values)).then(() =>
-      notification.success({ message: '角色编辑成功' })
-    )
+  async function onSubmit(values: MoehubDataCharacterHandle) {
+    await updateCharacter(Number(characterId), handleMoehubDataCharacter(values))
+    notification.success({ message: '角色编辑成功' })
   }
 
   return (

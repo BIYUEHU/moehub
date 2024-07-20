@@ -10,7 +10,7 @@ class TagController implements interfaces.Controller {
   public constructor(@inject(Symbols.TagService) private readonly service: TagService) {}
 
   @httpGet('/')
-  async getAll(@response() res: Response) {
+  public async getAll(@response() res: Response) {
     res.body = await this.service.getAll()
   }
 }

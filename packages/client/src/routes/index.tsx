@@ -54,6 +54,12 @@ const routes: RouteConfig[] = [
     isPrivate: true
   },
   {
+    path: '/admin/password',
+    component: lazyLoader(() => import('@/views/Admin/Password')),
+    title: '密码修改',
+    isPrivate: true
+  },
+  {
     path: '/admin/list',
     component: lazyLoader(() => import('@/views/Admin/List')),
     title: '角色列表',
@@ -70,6 +76,11 @@ const routes: RouteConfig[] = [
     component: lazyLoader(() => import('@/views/Admin/Edit')),
     title: '角色编辑',
     isPrivate: true
+  },
+  {
+    path: '*',
+    component: lazyLoader(() => import('@/views/404')),
+    title: '404'
   }
 ]
 

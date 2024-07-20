@@ -7,6 +7,7 @@ import { type AdapterClass, Core, Symbols as KotoriSymbols, Service } from '@kot
 import CmdAdapter, { config as cmdConfig } from '@kotori-bot/kotori-plugin-adapter-cmd'
 import Database from '../utils/db'
 import Bot from '../utils/bot'
+import Auth from '../utils/auth'
 import Logger from '../utils/logger'
 import CharacterController from '../router/controller/character.controller'
 import CharacterService from '../router/service/character.service'
@@ -67,6 +68,8 @@ const commonContainerModule = new ContainerModule((bind) => {
   /* Database Module */
   bind(Symbols.DatabaseFactory).toFactory(() => () => new PrismaClient())
   bind(Symbols.Database).to(Database)
+  /*  Auth Module */
+  bind(Symbols.Auth).to(Auth)
   /* Logger Module */
   bind(Symbols.LoggerFactory).toFactory(
     () =>

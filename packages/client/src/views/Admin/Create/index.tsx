@@ -7,11 +7,10 @@ import { useNavigate } from 'react-router-dom'
 const CreateView: React.FC = () => {
   const navigate = useNavigate()
 
-  function onSubmit(values: MoehubDataCharacterHandle) {
-    createCharacter(handleMoehubDataCharacter(values)).then(() => {
-      notification.success({ message: '角色创建成功' })
-      setTimeout(() => navigate(0), 500)
-    })
+  async function onSubmit(values: MoehubDataCharacterHandle) {
+    await createCharacter(handleMoehubDataCharacter(values))
+    notification.success({ message: '角色创建成功' })
+    setTimeout(() => navigate(0), 500)
   }
 
   return (

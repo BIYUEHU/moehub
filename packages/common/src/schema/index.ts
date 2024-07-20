@@ -71,5 +71,13 @@ export const settingsSchema = Tsu.Object({
   smtp_email: Tsu.String().optional(),
   smtp_key: Tsu.String().optional(),
   smtp_name: Tsu.String().optional(),
+  smtp_template: Tsu.String().optional(),
   birthdays: Tsu.Boolean().optional()
 }).strict()
+
+export const loginSchema = Tsu.Object({
+  email: Tsu.String(),
+  password: Tsu.String()
+}).strict()
+
+export const UpdateLoginSchema = Tsu.Object({ oldPassword: Tsu.String(), newPassword: Tsu.String() }).strict()

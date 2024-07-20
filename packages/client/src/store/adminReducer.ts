@@ -3,23 +3,23 @@ import { createSlice } from '@reduxjs/toolkit'
 export const adminSlice = createSlice({
   name: 'admin',
   initialState: {
-    isLoggedIn: false
+    token: ''
   },
   reducers: {
-    login: (state) => {
-      state.isLoggedIn = true
+    login: (state, { payload }: { payload: string }) => {
+      state.token = payload
     },
     logout: (state) => {
-      state.isLoggedIn = false
+      state.token = ''
     }
   },
   selectors: {
-    isLoggedIn: (state) => state.isLoggedIn
+    getToken: (state) => state.token
   }
 })
 
 export const { login, logout } = adminSlice.actions
 
-export const { isLoggedIn } = adminSlice.selectors
+export const { getToken } = adminSlice.selectors
 
 export default adminSlice.reducer

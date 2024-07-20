@@ -1,4 +1,4 @@
-import { Button, Card, Flex, Form, Input, InputNumber, notification, Select, Space, Switch, Tabs } from 'antd'
+import { Alert, Button, Card, Flex, Form, Input, InputNumber, notification, Space, Switch, Tabs } from 'antd'
 import type { MoehubDataSettings, MoehubDataSettingsSubmit } from '@moehub/common'
 import { useDispatch, useSelector } from 'react-redux'
 import { getSettings, loadSettings } from '@/store/settingsReducer'
@@ -7,7 +7,7 @@ import { updateSettings } from '@/http'
 import { useNavigate } from 'react-router-dom'
 import ListForm from '@/components/ListForm'
 
-const items = [
+const items = (isSame: boolean) => [
   {
     key: '1',
     label: '网站设置',
@@ -22,11 +22,24 @@ const items = [
         <Form.Item name="site_url" label="网站地址" rules={[{ required: true }]}>
           <Input />
         </Form.Item>
-        <Form.Item name="site_backgrounds" label="网站背景" rules={[{ required: true }]}>
-          <Select mode="tags" allowClear />
-        </Form.Item>
+
+        {isSame ? null : (
+          <>
+            <Alert message="当前网站地址与网站设置中的地址不一致" type="warning" showIcon closable />
+            <br />
+          </>
+        )}
         <Form.Item name="site_logo" label="网站 Logo" rules={[{ required: true }]}>
           <Input />
+        </Form.Item>
+        <Form.Item label="网站背景">
+          <ListForm name="site_backgrounds" addButtonText="添加图片">
+            {(name) => (
+              <Form.Item name={name} rules={[{ required: true }]}>
+                <Input />
+              </Form.Item>
+            )}
+          </ListForm>
         </Form.Item>
       </>
     )
@@ -132,22 +145,22 @@ const SettingsView: React.FC = () => {
 
   useEffect(() => form.setFieldsValue(settings))
 
-  function onSubmit(values: MoehubDataSettingsSubmit) {
+  async function onSubmit(values: MoehubDataSettingsSubmit) {
     const handler = (items: ([string, string] | { 0: string; 1: string })[]) =>
       items.map((item) => [item[0], item[1]]) as [string, string][]
-    console.log(values.site_logo, values['logo_url'])
+
     const data = {
       ...values,
       home_buttons: values.home_buttons ? handler(values.home_buttons) : undefined,
       home_timeline: values.home_timeline ? handler(values.home_timeline) : undefined
     }
-    updateSettings(data).then(() => {
-      notification.success({ message: '保存成功' })
-      dispatch(loadSettings(data))
-      setTimeout(() => {
-        navigate(0)
-      }, 500)
-    })
+
+    await updateSettings(data)
+    notification.success({ message: '保存成功' })
+    dispatch(loadSettings(data))
+    setTimeout(() => {
+      navigate(0)
+    }, 500)
   }
 
   return (
@@ -156,7 +169,7 @@ const SettingsView: React.FC = () => {
       <Flex justify="center" align="center" vertical>
         <Card hoverable className="card cardFixed">
           <Form form={form} name="control-hooks" className="cardForm cleanAll" onFinish={onSubmit}>
-            <Tabs defaultActiveKey="1" items={items} />
+            <Tabs defaultActiveKey="1" items={items(new URL(location.href).origin === settings.site_url)} />
             <br />
             <Form.Item>
               <Space>

@@ -3,13 +3,9 @@ import { LoginOutlined } from '@ant-design/icons'
 import { Link, useNavigate } from 'react-router-dom'
 import styles from './styles.module.css'
 import { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { isLoggedIn } from '@/store/adminReducer'
-import useSWR from 'swr'
-import { getSettings } from '@/http'
-import { loadSettings } from '@/store/settingsReducer'
-import Loading from '../Loading'
-import ErrorResult from '../result/error'
+import { getToken } from '@/store/adminReducer'
+import { getCurrentBackground, getSettings } from '@/store/settingsReducer'
+import { useSelector } from 'react-redux'
 
 interface LayoutProps {
   title: string
@@ -19,27 +15,21 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({ title, outlet, isPrivate }) => {
   const navigate = useNavigate()
-  const isLogged = useSelector(isLoggedIn)
-  const dispatch = useDispatch()
-  const { data, error } = useSWR('/api/settings', getSettings)
+  const isLogged = useSelector(getToken)
+  const settings = useSelector(getSettings)
+  const currentBackground = useSelector(getCurrentBackground)
 
   useEffect(() => {
-    if (data) {
-      dispatch(loadSettings(data))
-      document.title = title ? `${title} | ${data.site_title}` : data.site_title
-    }
-    if (isPrivate && !isLogged) navigate('./login')
-  }, [data, dispatch, navigate, isPrivate, isLogged, title])
-
-  if (error) return <ErrorResult />
-  if (!data) return <Loading />
+    document.title = title ? `${title} | ${settings.site_title}` : settings.site_title
+    if (isPrivate && !isLogged) navigate('/admin/login')
+  })
 
   return (
     <>
       <div
         className={styles.background}
         style={{
-          backgroundImage: `url(${data.site_backgrounds[Math.floor(Math.random() * data.site_backgrounds.length)]})`
+          backgroundImage: `url(${currentBackground})`
         }}
       />
       <Flex gap="middle" wrap>
@@ -47,8 +37,8 @@ const Layout: React.FC<LayoutProps> = ({ title, outlet, isPrivate }) => {
           <AntLayout.Header className={styles.header}>
             <h1>
               <Link className={styles.headerTitle} to="/">
-                <Avatar onClick={() => {}} style={{ marginRight: 10 }} src={data.site_logo} />
-                {data.site_name}
+                <Avatar onClick={() => {}} style={{ marginRight: 10 }} src={settings.site_logo} />
+                {settings.site_name}
               </Link>
             </h1>
             <Link to="/admin">

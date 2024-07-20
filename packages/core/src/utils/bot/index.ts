@@ -1,8 +1,9 @@
 import type AdapterCmd from '@kotori-bot/kotori-plugin-adapter-cmd'
 import { inject, injectable } from 'inversify'
-import { type Core, Symbols as KotoriSymbols } from '@kotori-bot/core'
-import { Symbols } from '../../container'
+import type { Core } from '@kotori-bot/core'
+import container, { Symbols } from '../../container'
 import type Database from '../db'
+import type SettingsService from '../../router/service/settings.service'
 
 /* Define config */
 const commonConfig = {
@@ -44,16 +45,34 @@ export class Bot {
       identity: string
     ) => Core
   ) {
-    this.ctx = botFactory(kotoriConfig, pdb, botConfig, 'line')
+    this.ctx = botFactory(kotoriConfig, pdb, botConfig, 'line').extends()
     this.register()
   }
 
   /* Register command */
   public register() {
+    // this.ctx.midware((next, session) => {
+    //   if (Array.from(this.ctx[KotoriSymbols.command]).some((cmd) => session.message.startsWith(cmd.meta.root))) {
+    //     next()
+    //     return
+    //   }
+    //   session.send('命令不存在！')
+    // })
+
     this.ctx.command('pwd - 重置密码').action(async (_, session) => {
       session.send('正在重置密码中...')
-      const newPassword = await session.prompt('请输入新密码：')
-      /* some code to reset password */
+      const newPassword = (await session.prompt('请输入新密码：')).trim()
+      const { encode, salt } = container.get<SettingsService>(Symbols.SettingsService).encodePassword(newPassword)
+      await Promise.all([
+        this.ctx.pdb.settings.updateMany({
+          where: { key: 'admin_password' },
+          data: { key: 'admin_password', value: encode }
+        }),
+        this.ctx.pdb.settings.updateMany({
+          where: { key: 'admin_salt' },
+          data: { key: 'admin_salt', value: salt }
+        })
+      ])
       return '密码重置成功'
     })
 
@@ -114,16 +133,6 @@ export class Bot {
         text += '\n'
         session.send(text)
       }
-    })
-
-    this.ctx.midware((next, session) => {
-      if (
-        Array.from(this.ctx[KotoriSymbols.command] ?? ['pwd', 'data', 'character']).every((cmd) =>
-          session.message.startsWith(typeof cmd === 'string' ? cmd : cmd.meta.root)
-        )
-      )
-        return next()
-      return session.send('命令不存在！')
     })
   }
 }

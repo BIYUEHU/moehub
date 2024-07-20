@@ -1,5 +1,5 @@
 import type { ParserInfer } from 'tsukiko'
-import type { characterSchema, collectionSchema, settingsSchema } from '../schema'
+import type { characterSchema, collectionSchema, UpdateLoginSchema, loginSchema, settingsSchema } from '../schema'
 
 export type UndefinedToNull<T extends Record<string, unknown>> = {
   [K in keyof T]: undefined extends T[K] ? Required<T>[K] | null : T[K]
@@ -39,3 +39,11 @@ export interface MoehubDataTag {
 export type MoehubDataSettingsSubmit = Partial<ParserInfer<typeof settingsSchema>>
 
 export type MoehubDataSettings = Required<MoehubDataSettingsSubmit>
+
+export type MoehubDataLoginSubmit = ParserInfer<typeof loginSchema>
+
+export interface MoehubDataLogin {
+  token: string
+}
+
+export type MoehubDataUpdateLoginSubmit = ParserInfer<typeof UpdateLoginSchema>

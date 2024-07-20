@@ -1,10 +1,10 @@
-import { Container } from 'inversify';
-import { Symbols } from './symbols';
-import modules from './modules';
+import { Container } from 'inversify'
+import { Symbols } from './symbols'
+import modules from './modules'
 
-export { Symbols };
+export { Symbols }
 
-export const container = new Container();
-container.load(...modules);
+export const container = new Container()
+container.load(...modules)
 
-export default container;
+export default container

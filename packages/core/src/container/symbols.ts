@@ -8,7 +8,7 @@ export const Symbols = {
   Database: Symbol.for('Database'),
   LoggerFactory: Symbol.for('Factory<Logger>'),
   Logger: Symbol.for('Logger'),
-  AuthFactory: Symbol.for('Factory<Auth>'),
+  // AuthFactory: Symbol.for('Factory<Auth>'),
   Auth: Symbol.for('Auth'),
   /* Router Modules */
   CharacterController: 'CharacterController',

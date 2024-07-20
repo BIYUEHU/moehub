@@ -1,6 +1,7 @@
 import type {
   MoehubDataCharacter,
   MoehubDataCollection,
+  MoehubDataLogin,
   MoehubDataSeries,
   MoehubDataSettings,
   MoehubDataTag
@@ -26,3 +27,5 @@ export type MoehubApiTags = MoehubApiBase<200, MoehubDataTag[]>
 export type MoehubApiSeries = MoehubApiBase<200, MoehubDataSeries[]>
 
 export type MoehubApiSettings = MoehubApiBase<200, MoehubDataSettings>
+
+export type MoehubApiLogin = MoehubApiBase<200, MoehubDataLogin>

@@ -23,7 +23,7 @@ a::selection {
 
 .cardButton {
   height: 40px;
-  width: 110px;
+  /* width: 110px; */
   color: #212121 !important;
   font-size: 1.2rem;
   margin: 10px;
@@ -48,6 +48,12 @@ a::selection {
   width: 1000px;
   max-width: 95vw;
   margin-bottom: 14px;
+}
+
+.cardSquare {
+    width: 550px;
+    max-width: 95vw;
+  
 }
 
 .clean {

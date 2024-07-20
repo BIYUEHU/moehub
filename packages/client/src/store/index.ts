@@ -10,7 +10,7 @@ const persistedReducer = persistReducer(
   {
     key: 'moehub',
     storage,
-    whitelist: ['admin', 'settings']
+    whitelist: ['admin']
   },
   combineReducers({
     admin: adminReducer,
