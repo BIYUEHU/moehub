@@ -53,7 +53,6 @@ a::selection {
 .cardSquare {
     width: 550px;
     max-width: 95vw;
-  
 }
 
 .clean {
@@ -72,4 +71,8 @@ a::selection {
   width: 500px;
   max-width: 95%;
   margin: 0 auto;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: bold;
 }

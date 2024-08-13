@@ -1,0 +1,26 @@
+.photoGallery {
+  padding: 20px;
+  max-width: 1400px;
+}
+
+.loadingContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.myMasonryGrid {
+  display: flex;
+  margin-left: -16px; /* gutter size offset */
+  width: auto;
+}
+
+.myMasonryGridColumn {
+  padding-left: 16px; /* gutter size */
+  background-clip: padding-box;
+}
+
+.imageItem {
+  margin-bottom: 16px;
+}

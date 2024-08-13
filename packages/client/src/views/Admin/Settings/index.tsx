@@ -123,14 +123,20 @@ const items = (isSame: boolean) => [
         <Form.Item name="smtp_port" label="SMTP 端口">
           <InputNumber max={65535} min={1} />
         </Form.Item>
-        <Form.Item name="smtp_email" label="SMTP 邮箱">
+        <Form.Item name="smtp_email" label="邮箱">
           <Input />
         </Form.Item>
-        <Form.Item name="smtp_key" label="SMTP 密钥">
+        <Form.Item name="smtp_key" label="密钥">
           <Input />
         </Form.Item>
-        <Form.Item name="smtp_name" label="SMTP 名称">
+        <Form.Item name="smtp_hours" label="发信整点小时（0 ~ 23）">
+          <InputNumber max={23} min={0} />
+        </Form.Item>
+        <Form.Item name="smtp_target" label="目标邮箱">
           <Input />
+        </Form.Item>
+        <Form.Item name="smtp_template" label="发信模板（支持角色信息变量）">
+          <Input.TextArea rows={5} />
         </Form.Item>
       </>
     )

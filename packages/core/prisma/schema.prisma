@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,6 +5,67 @@ generator client {
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
+}
+
+model Character {
+  id          Int                       @id @default(autoincrement())
+  name        String
+  romaji      String
+  gender      Gender
+  alias       String?
+  age         Int?
+  images      String?
+  url         String?
+  description String?
+  comment     String?
+  hitokoto    String?
+  birthday    DateTime?
+  voice       String?
+  series      String
+  seriesGenre SeriesGenre
+  tags        String?
+  hairColor   String?
+  eyeColor    String?
+  bloodType   bloodType?
+  height      Int?
+  bust        Int?
+  waist       Int?
+  hip         Int?
+  createdAt   DateTime                  @default(now())
+  color       String?
+  hide        Boolean                   @default(false)
+  order       Int                       @default(50)
+  songId      Int?
+  weight      Int?
+  collections CharacterWithCollection[]
+
+  @@unique([id, name])
+}
+
+model Collection {
+  id          Int                       @id @default(autoincrement())
+  name        String
+  description String?
+  characters  CharacterWithCollection[]
+
+  @@unique([id, name])
+}
+
+model CharacterWithCollection {
+  id           Int        @id @default(autoincrement())
+  characterId  Int
+  collectionId Int
+  character    Character  @relation(fields: [characterId], references: [id])
+  collection   Collection @relation(fields: [collectionId], references: [id])
+
+  @@index([characterId, collectionId], map: "character_collection_index")
+  @@index([collectionId], map: "CharacterWithCollection_collectionId_fkey")
+}
+
+model Settings {
+  id    Int     @id @default(autoincrement())
+  key   String
+  value String? @db.LongText
 }
 
 enum Gender {
@@ -33,70 +88,4 @@ enum bloodType {
   B
   AB
   O
-}
-
-model Character {
-  id          Int                       @id @default(autoincrement()) // 唯一标识符
-  // 必要数据
-  name        String // 角色名（日语原名）
-  romaji      String // 角色名罗马音
-  gender      Gender // 角色性别
-  color       String? // 角色主色
-  order       Int                       @default(50) // 角色排序
-  hide        Boolean                   @default(false) // 是否隐藏角色
-  // 基本数据
-  alias       String? // 角色中文名、昵称、别名（字符串数组）
-  age         Int? // 角色年龄
-  images      String? // 角色相关图片（字符串数组）
-  songId      Int? // 角色歌曲ID
-  url         String? // 角色相关链接（字符串数组）
-  description String? // 角色描述
-  comment     String? // 角色个人评论
-  hitokoto    String? // 角色一言
-  birthday    DateTime? // 角色生日
-  voice       String? // 角色配音
-  // 关联数据
-  series      String
-  seriesGenre SeriesGenre
-  collections CharacterWithCollection[] // 角色所属收藏夹
-  tags        String? // 角色萌点（字符串数组）
-  // 额外数据
-  hairColor   String? // 角色发色
-  eyeColor    String? // 角色瞳色
-  bloodType   bloodType? // 角色血型
-  height      Int? // 角色身高
-  weight      Int? // 角色体重
-  bust        Int? // 角色胸围
-  waist       Int? // 角色腰围
-  hip         Int? // 角色臀围
-
-  createdAt DateTime @default(now())
-
-  @@unique([id, name])
-}
-
-model Collection {
-  id          Int                       @id @default(autoincrement())
-  name        String // 收藏夹名
-  description String? // 收藏夹描述
-  characters  CharacterWithCollection[]
-
-  @@unique([id, name])
-}
-
-model CharacterWithCollection {
-  id Int @id @default(autoincrement())
-
-  character    Character  @relation(fields: [characterId], references: [id])
-  characterId  Int
-  collection   Collection @relation(fields: [collectionId], references: [id])
-  collectionId Int
-
-  @@index([characterId, collectionId], name: "character_collection_index")
-}
-
-model Settings {
-  id    Int     @id @default(autoincrement())
-  key   String
-  value String? @db.LongText
 }

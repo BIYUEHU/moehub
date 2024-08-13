@@ -31,6 +31,11 @@ const routes: RouteConfig[] = [
     title: '角色详情'
   },
   {
+    path: '/photos',
+    component: lazyLoader(() => import('@/views/Photos')),
+    title: '相册'
+  },
+  {
     path: '/about',
     component: lazyLoader(() => import('@/views/About')),
     title: '关于'
@@ -75,6 +80,12 @@ const routes: RouteConfig[] = [
     path: '/admin/edit/:id',
     component: lazyLoader(() => import('@/views/Admin/Edit')),
     title: '角色编辑',
+    isPrivate: true
+  },
+  {
+    path: '/admin/imgs',
+    component: lazyLoader(() => import('@/views/Admin/Imgs')),
+    title: '图片上传',
     isPrivate: true
   },
   {

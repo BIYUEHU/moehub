@@ -14,7 +14,7 @@ interface LoginData {
 const LoginView: React.FC = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const isLogged = useSelector(getToken)
+  const isLogged = !!useSelector(getToken)
 
   useEffect(() => {
     if (isLogged) navigate('/admin')

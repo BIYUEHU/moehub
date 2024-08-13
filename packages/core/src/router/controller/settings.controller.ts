@@ -1,12 +1,23 @@
 import type { Response } from 'koa'
-import { controller, httpGet, type interfaces, response, httpPut, requestBody, httpPost } from 'inversify-koa-utils'
+import {
+  controller,
+  httpGet,
+  type interfaces,
+  response,
+  httpPut,
+  requestBody,
+  httpPost,
+  requestParam
+} from 'inversify-koa-utils'
 import { inject, injectable } from 'inversify'
 import { Symbols } from '../../container'
 import type SettingsService from '../service/settings.service'
 import { UpdateLoginSchema, loginSchema, settingsSchema } from '@moehub/common'
 import Auth from '../../utils/auth'
 import type { Context } from 'koa'
-import Logger from '@kotori-bot/logger'
+import config from '../../config'
+import koaBody from 'koa-body'
+import { randomUUID } from 'node:crypto'
 
 @controller('/settings')
 @injectable()
@@ -38,6 +49,43 @@ class SettingsController implements interfaces.Controller {
     const data = UpdateLoginSchema.parse(ctx.request.body)
     await this.service.updateLogin(data, ctx.state.user.email)
     ctx.response.status = 204
+  }
+
+  @httpPost('/email/:target', Auth.middleware())
+  public async emailPost(@requestParam('target') target: string) {
+    await this.service.email(target)
+  }
+
+  @httpPost(
+    '/imgs',
+    Auth.middleware(),
+    koaBody({
+      multipart: true,
+      formidable: {
+        uploadDir: config.uploadDir,
+        keepExtensions: true,
+        filename: (_, ext) => `${randomUUID()}${ext}`,
+        filter: (part) => part.mimetype?.startsWith('image/') || false
+      }
+    })
+  )
+  public imgsPost(ctx: Context) {
+    const file = ctx.request.files?.file
+    if (!file) {
+      ctx.response.status = 400
+      return
+    }
+    ctx.body = (Array.isArray(file) ? file : [file]).map((file) => ({
+      filename: file.newFilename,
+      originalname: file.originalFilename,
+      mimetype: file.mimetype,
+      size: file.size
+    }))
+  }
+
+  @httpGet('/imgs/', Auth.middleware())
+  public imgsGey(@response() res: Response) {
+    res.body = this.service.allImages()
   }
 }
 

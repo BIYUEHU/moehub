@@ -48,7 +48,8 @@ export const characterSchema = Tsu.Object({
   bust: intPositive.optional(),
   waist: intPositive.optional(),
   hip: intPositive.optional(),
-  order: Tsu.Number().int().min(0).default(50)
+  order: Tsu.Number().int().min(0).default(50),
+  hide: Tsu.Boolean().default(false)
 }).strict()
 
 export const settingsSchema = Tsu.Object({
@@ -70,7 +71,8 @@ export const settingsSchema = Tsu.Object({
   smtp_port: Tsu.Number().int().range(1, 65535).optional(),
   smtp_email: Tsu.String().optional(),
   smtp_key: Tsu.String().optional(),
-  smtp_name: Tsu.String().optional(),
+  smtp_hours: Tsu.Number().int().range(0, 23).optional(),
+  smtp_target: Tsu.String().optional(),
   smtp_template: Tsu.String().optional(),
   birthdays: Tsu.Boolean().optional()
 }).strict()

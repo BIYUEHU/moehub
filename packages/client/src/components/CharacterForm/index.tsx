@@ -1,10 +1,11 @@
-import { Button, ColorPicker, DatePicker, Form, Input, InputNumber, Radio, Select, Space, Tabs } from 'antd'
+import { Button, ColorPicker, DatePicker, Form, Input, InputNumber, Radio, Select, Space, Switch, Tabs } from 'antd'
 import type { MoehubDataCharacter, MoehubDataCharacterSubmit } from '@moehub/common'
 import dayjs from 'dayjs'
 import { getTags } from '@/http'
 import useSWR from 'swr'
 import { useEffect } from 'react'
 import ListForm from '../ListForm'
+import { t } from '@/i18n'
 
 export type MoehubDataCharacterHandle = Omit<MoehubDataCharacterSubmit, 'birthday' | 'color'> & {
   birthday?: dayjs.Dayjs
@@ -28,33 +29,33 @@ interface CharacterFormProps {
 const items = (isDisabled: boolean, tags?: { label: string; value: string }[]) => [
   {
     key: '1',
-    label: '基本信息',
+    label: t`com.characterForm.label.1`,
     children: (
       <>
-        <Form.Item name="name" label="角色名" rules={[{ required: true }]}>
+        <Form.Item name="name" label={t`com.characterForm.name`} rules={[{ required: true }]}>
           <Input disabled={isDisabled} />
         </Form.Item>
-        <Form.Item name="romaji" label="罗马音" rules={[{ required: true }]}>
+        <Form.Item name="romaji" label={t`com.characterForm.romaji`} rules={[{ required: true }]}>
           <Input />
         </Form.Item>
-        <Form.Item name="gender" label="性别" rules={[{ required: true }]}>
+        <Form.Item name="gender" label={t`com.characterForm.gender`} rules={[{ required: true }]}>
           <Radio.Group>
-            <Radio.Button value="MALE">男性</Radio.Button>
-            <Radio.Button value="FEMALE">女性</Radio.Button>
-            <Radio.Button value="OTHER">其它/未知</Radio.Button>
+            <Radio.Button value="MALE">{t`com.characterForm.gender.male`}</Radio.Button>
+            <Radio.Button value="FEMALE">{t`com.characterForm.gender.female`}</Radio.Button>
+            <Radio.Button value="OTHER">{t`com.characterForm.gender.other`}</Radio.Button>
           </Radio.Group>
         </Form.Item>
-        <Form.Item name="series" label="作品名" rules={[{ required: true }]}>
+        <Form.Item name="series" label={t`com.characterForm.series`} rules={[{ required: true }]}>
           <Input />
         </Form.Item>
-        <Form.Item name="seriesGenre" label="作品类型" rules={[{ required: true }]}>
+        <Form.Item name="seriesGenre" label={t`com.characterForm.seriesGenre`} rules={[{ required: true }]}>
           <Radio.Group>
-            <Radio value="ANIME">动画</Radio>
-            <Radio value="COMIC">漫画</Radio>
-            <Radio value="GALGAME">Galgame</Radio>
-            <Radio value="GAME">游戏</Radio>
-            <Radio value="NOVEL">轻小说</Radio>
-            <Radio value="OTHER">其它</Radio>
+            <Radio value="ANIME">{t`com.characterForm.seriesGenre.anime`}</Radio>
+            <Radio value="COMIC">{t`com.characterForm.seriesGenre.comic`}</Radio>
+            <Radio value="GALGAME">{t`com.characterForm.seriesGenre.galgame`}</Radio>
+            <Radio value="GAME">{t`com.characterForm.seriesGenre.game`}</Radio>
+            <Radio value="NOVEL">{t`com.characterForm.seriesGenre.novel`}</Radio>
+            <Radio value="OTHER">{t`com.characterForm.seriesGenre.other`}</Radio>
           </Radio.Group>
         </Form.Item>
       </>
@@ -62,14 +63,14 @@ const items = (isDisabled: boolean, tags?: { label: string; value: string }[]) =
   },
   {
     key: '2',
-    label: '详细信息',
+    label: t`com.characterForm.label.2`,
     children: (
       <>
-        <Form.Item name="alias" label="角色别名">
+        <Form.Item name="alias" label={t`com.characterForm.images.alias`}>
           <Select mode="tags" />
         </Form.Item>
-        <Form.Item label="相关图片">
-          <ListForm name="images" addButtonText="添加图片链接">
+        <Form.Item label={t`com.characterForm.images`}>
+          <ListForm name="images" addButtonText={t`com.characterForm.images.button`}>
             {(name) => (
               <Form.Item name={name} rules={[{ required: true }]}>
                 <Input />
@@ -103,7 +104,7 @@ const items = (isDisabled: boolean, tags?: { label: string; value: string }[]) =
   },
   {
     key: '3',
-    label: '其它信息',
+    label: t`com.characterForm.label.3`,
     children: (
       <>
         <Form.Item name="voice" label="声优">
@@ -144,6 +145,12 @@ const items = (isDisabled: boolean, tags?: { label: string; value: string }[]) =
         <Form.Item name="url" label="相关链接">
           <Select mode="tags" />
         </Form.Item>
+        <Form.Item name="order" label="权重（值越小排列越靠前）" rules={[{ type: 'number' }]}>
+          <InputNumber min={1} />
+        </Form.Item>
+        <Form.Item name="hide" label="是否隐藏">
+          <Switch checkedChildren="隐藏" unCheckedChildren="显示" />
+        </Form.Item>
       </>
     )
   }
@@ -170,7 +177,7 @@ const CharacterForm: React.FC<CharacterFormProps> = ({ onSubmit, data }) => {
       <Form.Item>
         <Space>
           <Button type="primary" htmlType="submit" className="cardButton">
-            提交
+            {t`com.characterForm.submit`}
           </Button>
         </Space>
       </Form.Item>

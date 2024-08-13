@@ -1,5 +1,6 @@
 import { ContainerModule } from 'inversify'
 import { InversifyKoaServer, TYPE, type interfaces } from 'inversify-koa-utils'
+import type { MoehubDataSettings } from '@moehub/common'
 import { PrismaClient } from '@prisma/client'
 import Logging from '@kotori-bot/logger'
 import { Symbols } from './symbols'
@@ -23,6 +24,10 @@ import SettingsService from '../router/service/settings.service'
 declare module '@kotori-bot/core' {
   interface Context {
     pdb: Service & Database
+  }
+
+  interface EventsMapping {
+    emailSettingsChange(settings: MoehubDataSettings): void
   }
 }
 

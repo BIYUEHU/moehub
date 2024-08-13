@@ -1,5 +1,5 @@
 import { Flex, Layout as AntLayout, Avatar } from 'antd'
-import { LoginOutlined } from '@ant-design/icons'
+import { PictureOutlined, PoweroffOutlined } from '@ant-design/icons'
 import { Link, useNavigate } from 'react-router-dom'
 import styles from './styles.module.css'
 import { useEffect } from 'react'
@@ -41,9 +41,14 @@ const Layout: React.FC<LayoutProps> = ({ title, outlet, isPrivate }) => {
                 {settings.site_name}
               </Link>
             </h1>
-            <Link to="/admin">
-              <Avatar style={{ background: 'none', color: '#eee' }} icon={<LoginOutlined />} />
-            </Link>
+            <div>
+              <Link to="/photos">
+                <Avatar style={{ background: 'none', color: '#eee' }} icon={<PictureOutlined />} />
+              </Link>
+              <Link to="/admin">
+                <Avatar style={{ background: 'none', color: '#eee' }} icon={<PoweroffOutlined />} />
+              </Link>
+            </div>
           </AntLayout.Header>
           <AntLayout.Content className={styles.content}>{outlet}</AntLayout.Content>
           <AntLayout.Footer className={styles.footer}>

@@ -1,14 +1,25 @@
-import type AdapterCmd from '@kotori-bot/kotori-plugin-adapter-cmd'
 import { inject, injectable } from 'inversify'
-import type { Core } from '@kotori-bot/core'
+import type AdapterCmd from '@kotori-bot/kotori-plugin-adapter-cmd'
+import * as Helper from '@kotori-bot/kotori-plugin-helper'
+import { type Core, Symbols as KotoriSymbols, type ModuleExport } from '@kotori-bot/core'
 import container, { Symbols } from '../../container'
 import type Database from '../db'
 import type SettingsService from '../../router/service/settings.service'
+import type { MoehubDataSettings } from '@moehub/common'
+import { createTransport } from 'nodemailer'
+import type Logger from '../logger'
+import { resolve } from 'node:path'
+
+interface SendMailCharacterData {
+  name: string
+  romaji: string
+  birthday: Date
+}
 
 /* Define config */
 const commonConfig = {
-  lang: 'en_US' as const,
-  'command-prefix': ''
+  lang: 'zh_CN' as const,
+  commandPrefix: ''
 }
 
 const kotoriConfig = {
@@ -25,16 +36,18 @@ const botConfig = {
   ...commonConfig,
   extends: 'cmd',
   'self-nickname': '',
-  master: 0,
-  age: 0,
-  'self-id': 0,
-  nickname: '',
-  sex: 'male' as const
+  master: '0',
+  'self-id': '0',
+  nickname: ''
 }
 
 @injectable()
 export class Bot {
-  private ctx: Core
+  private static ctx: Core
+
+  private taskDispose?: () => void
+
+  public ctx: Core
 
   public constructor(
     @inject(Symbols.Database) pdb: Database,
@@ -43,21 +56,35 @@ export class Bot {
       pdb: Database,
       botConfig: ConstructorParameters<typeof AdapterCmd>[1],
       identity: string
-    ) => Core
+    ) => Core,
+    @inject(Symbols.Logger) private readonly logger: Logger
   ) {
-    this.ctx = botFactory(kotoriConfig, pdb, botConfig, 'line').extends()
-    this.register()
+    if (Bot.ctx) {
+      this.ctx = Bot.ctx
+    } else {
+      this.ctx = botFactory(kotoriConfig, pdb, botConfig, 'line')
+      this.register()
+      Bot.ctx = this.ctx
+    }
   }
 
-  /* Register command */
-  public register() {
-    // this.ctx.midware((next, session) => {
-    //   if (Array.from(this.ctx[KotoriSymbols.command]).some((cmd) => session.message.startsWith(cmd.meta.root))) {
-    //     next()
-    //     return
-    //   }
-    //   session.send('命令不存在！')
-    // })
+  private async register() {
+    this.ctx.load({
+      config: { keywords: [] },
+      main: Helper.main as ModuleExport['main']
+    })
+
+    this.ctx.i18n.use(resolve(...Helper.lang))
+
+    this.ctx.on('emailSettingsChange', (settings) => this.setTask(settings))
+
+    this.ctx.midware((next, session) => {
+      if (Array.from(this.ctx[KotoriSymbols.command]).some((cmd) => session.message.startsWith(cmd.meta.root))) {
+        next()
+        return
+      }
+      session.send('命令不存在！')
+    })
 
     this.ctx.command('pwd - 重置密码').action(async (_, session) => {
       session.send('正在重置密码中...')
@@ -99,12 +126,16 @@ export class Bot {
       ? tsukiko is incompatible, so that a error occurred. However, this issue has
       ? been resolved in the next Kotori minor version (v1.6.0).
     */
-    // ! FALSE:
-    // this.ctx.command('character [name] - 获取角色数据').action(async (_, session) => {
-    // * TRUE:
-    this.ctx.command('character - 获取角色数据').action(async (_, session) => {
+    this.ctx.command('character [name] - 获取角色数据').action(async ({ args: [name] }, session) => {
       session.send('正在获取数据中...')
-      const characters = (await this.ctx.pdb.character.findMany()).sort((a, b) => a.order - b.order)
+      const characters = (await this.ctx.pdb.character.findMany())
+        .sort((a, b) => a.order - b.order)
+        .filter((char) => !name || char.name.includes(name) || char.romaji.includes(name))
+
+      if (characters.length === 0) {
+        session.send('没能找到任何数据')
+        return
+      }
 
       for (const character of characters) {
         let text = ''
@@ -114,7 +145,7 @@ export class Bot {
         if (character.gender !== 'FEMALE') text += `性别: ${character.gender}\n`
         if (character.alias) text += `别名: ${character.alias.replaceAll('|', '、')}\n`
         if (character.age) text += `年龄: ${character.age}\n`
-        // if (character.images) text += `图片: ${character.images.replaceAll('|', '、')}\n`
+        if (character.images) text += `图片: ${character.images.replaceAll('|', '、')}\n`
         if (character.description) text += `描述: ${character.description}\n`
         if (character.comment) text += `评论: ${character.comment}\n`
         if (character.hitokoto) text += `一言: ${character.hitokoto}\n`
@@ -133,6 +164,58 @@ export class Bot {
         text += '\n'
         session.send(text)
       }
+    })
+  }
+
+  private setTask(settings: MoehubDataSettings) {
+    const { birthdays, smtp_email, smtp_host, smtp_hours, smtp_key, smtp_port, smtp_target, smtp_template } = settings
+    this.taskDispose?.()
+
+    if ((!birthdays && !smtp_email) || !smtp_host || !smtp_key || !smtp_port || !smtp_target || !smtp_template) return
+    if (smtp_hours === undefined) return
+
+    this.taskDispose = this.ctx.task(`* ${smtp_hours} * * *`, async () => {
+      for (const character of await this.ctx.pdb.character.findMany()) {
+        if (!character.birthday) continue
+        const today = new Date()
+        if (character.birthday.getMonth() === today.getMonth() && character.birthday.getDate() === today.getDate())
+          this.sendMail(character as SendMailCharacterData, settings)
+      }
+    })
+
+    this.logger.info(`Set email notify successfully,will send the mail at ${smtp_hours} o'clock.`)
+  }
+
+  public sendMail(
+    character: SendMailCharacterData,
+    {
+      smtp_email: user,
+      smtp_host: host,
+      smtp_key: pass,
+      smtp_port: port,
+      smtp_target,
+      smtp_template
+    }: MoehubDataSettings
+  ) {
+    const title = `${character.birthday.getMonth() + 1} 月 ${character.birthday.getDate()} 日，${character.name} の誕生日！`
+    const message = smtp_template
+      .replaceAll('%name%', character.name)
+      .replaceAll('%romaji%', character.romaji)
+      .replaceAll('%month%', (character.birthday.getMonth() + 1).toString())
+      .replaceAll('%day%', character.birthday.getDate().toString())
+
+    return createTransport({ host, port, secure: false, auth: { user, pass } }).sendMail({
+      from: user,
+      to: smtp_target,
+      subject: title,
+      html: /* html */ `
+      <html>
+        <body>
+          ${message}
+        </body>
+      </html>
+    `,
+      text: message.replace(/<[^>]*>?/gm, '')
     })
   }
 }

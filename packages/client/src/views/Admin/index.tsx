@@ -75,6 +75,11 @@ const AdminView: React.FC = () => {
                 创建角色
               </Button>
             </Link>
+            <Link to="./imgs">
+              <Button className="cardButton" ghost>
+                上传图片
+              </Button>
+            </Link>
             <Button className="cardButton" ghost onClick={() => setIsModalOpen(true)}>
               退出登录
             </Button>

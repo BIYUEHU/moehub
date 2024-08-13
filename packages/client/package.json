@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@ant-design/icons": "^5.3.7",
+    "@kotori-bot/core": "1.6.0-rc.1",
+    "@kotori-bot/i18n": "^1.3.2",
     "@moehub/common": "workspace:^",
     "@reduxjs/toolkit": "^2.2.6",
     "antd": "^5.18.1",
@@ -19,6 +21,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-helmet-async": "^2.0.5",
+    "react-masonry-css": "^1.0.16",
     "react-redux": "^9.1.2",
     "react-router-dom": "^6.23.1",
     "redux-persist": "^6.0.0",

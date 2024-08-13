@@ -5,20 +5,7 @@
   "main": "dist/index.js",
   "license": "GPL-3.0",
   "author": "Romi <biyuehuya@gmail.com>",
-  "scripts": {
-    "build": "tsc"
-  },
-  "keywords": [
-    "anime",
-    "character",
-    "gallery",
-    "share",
-    "acg",
-    "server",
-    "bot",
-    "web",
-    "back-end"
-  ],
+  "keywords": ["anime", "character", "gallery", "share", "acg", "server", "bot", "web", "back-end"],
   "bugs": {
     "url": "https://github.com/biyuehu/moehub/issues"
   },

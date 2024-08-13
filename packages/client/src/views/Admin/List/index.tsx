@@ -18,7 +18,10 @@ const ListView: React.FC = () => {
       <Flex justify="center" align="center" vertical wrap>
         <Card hoverable className="card cardFixed">
           {data ? (
-            <Table dataSource={data.map((data) => ({ ...data, key: data.id }))} className={`${styles.table} cleanAll`}>
+            <Table
+              dataSource={data.map((data) => ({ ...data, key: data.id })).sort((el1, el2) => el1.order - el2.order)}
+              className={`${styles.table} cleanAll`}
+            >
               <ColumnGroup title="角色名">
                 <Column title="原名" dataIndex="name" key="name" />
                 <Column title="罗马音" dataIndex="romaji" key="romaji" />
@@ -32,14 +35,23 @@ const ListView: React.FC = () => {
               <Column
                 title="操作"
                 key="name"
-                render={(_, { id }: MoehubDataCharacter) => (
+                render={(_, data: MoehubDataCharacter) => (
                   <Space size="middle">
-                    <Link to={`/admin/edit/${id}`}>编辑</Link>
+                    <Link to={`/admin/edit/${data.id}`}>编辑</Link>
+                    {/* <span
+                      onClick={() =>
+                        updateCharacter(data.id, handleMoehubDataCharacter({ ...data, hide: !data.hide })).then(() =>
+                          notification.success({ message: `角色${!data.hide ? '隐藏' : '显示'}成功！` })
+                        )
+                      }
+                    >
+                      {data.hide ? '隐藏' : '显示'}`
+                    </span> */}
                     <Popconfirm
                       title="删除角色"
                       description="确定要删除这个角色吗?"
                       onConfirm={() =>
-                        deleteCharacter(id).then(() => notification.success({ message: '角色删除成功！' }))
+                        deleteCharacter(data.id).then(() => notification.success({ message: '角色删除成功！' }))
                       }
                       okText="Yes"
                       cancelText="No"

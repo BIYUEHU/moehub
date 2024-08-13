@@ -77,3 +77,7 @@ export async function postLogin(email: string, password: string): Promise<Moehub
 export async function updateLogin(newPassword: string, oldPassword: string): Promise<MoehubApiBase<204>> {
   return await httpNoCatcher.put('/settings/login', { newPassword, oldPassword })
 }
+
+export async function getImgs(): Promise<string[]> {
+  return (await http.get('/settings/imgs')).data
+}

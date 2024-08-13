@@ -1,6 +1,6 @@
 import 'reflect-metadata'
 import type Koa from 'koa'
-import bodyParser from 'koa-bodyparser'
+// import bodyParser from 'koa-bodyparser'
 import { inject, injectable } from 'inversify'
 import type { InversifyKoaServer } from 'inversify-koa-utils'
 import { TsuError } from '@moehub/common'
@@ -9,6 +9,10 @@ import type Bot from '../utils/bot'
 import type Auth from '../utils/auth'
 import type Logger from '../utils/logger'
 import HttpError from './error'
+import type SettingsService from '../router/service/settings.service'
+import serve from 'koa-static'
+import config from '../config'
+import koaBody from 'koa-body'
 
 declare module 'koa' {
   interface Context {
@@ -26,15 +30,19 @@ export class Application {
 
   private initialize() {
     this.server.setConfig((app) => {
-      app.use(bodyParser())
+      app.use(koaBody())
+      app.use(serve(config.public))
+      // app.use(bodyParser())
       app.use(container.get<Auth>(Symbols.Auth).init())
       app.use(async (ctx, next) => {
-        ctx.accepts('application/json')
+        ctx.accepts('application/json, multipart/form-data')
         ctx.set('Access-Control-Allow-Methods', '*')
         ctx.set('Access-Control-Allow-Origin', '*')
-        ctx.set('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+        ctx.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, x-requested-with')
+        ctx.set('Access-Control-Max-Age', '86400')
 
         const { method, url, body } = ctx.request
+        // console.log(ctx.request)
         if (method === 'OPTIONS') {
           ctx.status = 204
           return
@@ -86,7 +94,8 @@ export class Application {
     @inject(Symbols.ServerFactory)
     serverFactory: (...args: ConstructorParameters<typeof InversifyKoaServer>) => InversifyKoaServer,
     @inject(Symbols.Bot) bot: Bot,
-    @inject(Symbols.Logger) logger: Logger
+    @inject(Symbols.Logger) logger: Logger,
+    @inject(Symbols.SettingsService) settingsService: SettingsService
   ) {
     this.server = serverFactory(container, undefined, { rootPath: '/api' })
     this.bot = bot
@@ -95,6 +104,9 @@ export class Application {
     this.initialize()
     this.instance = this.server.build()
     this.listen = this.instance.listen.bind(this.instance)
+    ;(async () => {
+      bot.ctx.emit('emailSettingsChange', await settingsService.get(true))
+    })()
   }
 }
 
