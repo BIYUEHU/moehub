@@ -12,3 +12,9 @@ lib
 tsconfig.tsbuildinfo
 
 .env
+
+migrations
+
+packages/core/public/imgs/**/*.png
+packages/core/public/imgs/**/*.jpg
+packages/core/public/imgs/**/*.jpeg

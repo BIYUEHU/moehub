@@ -8,6 +8,7 @@ import { getCharacter } from '@/http'
 import { useSelector } from 'react-redux'
 import { getSettings } from '@/store/settingsReducer'
 import { useEffect } from 'react'
+import i18n, { t } from '@/i18n'
 
 interface InfoCardProps {
   children: React.ReactNode
@@ -20,17 +21,17 @@ function getRandomColor() {
 }
 
 const GenderReflect = {
-  MALE: '男性',
-  OTHER: '其它/未知'
+  MALE: t`view.character.gender.male`,
+  OTHER: t`view.character.gender.other`
 }
 
 const SeriesGenreReflect = {
-  ANIME: '动画',
-  COMIC: '漫画',
-  GALGAME: 'Galgame',
-  GAME: '游戏',
-  NOVEL: '轻小说',
-  OTHER: '其它'
+  ANIME: t`view.character.seriesGenre.anime`,
+  COMIC: t`view.character.seriesGenre.comic`,
+  GALGAME: t`view.character.seriesGenre.galgame`,
+  GAME: t`view.character.seriesGenre.game`,
+  NOVEL: t`view.character.seriesGenre.novel`,
+  OTHER: t`view.character.seriesGenre.other`
 }
 
 const InfoCard: React.FC<InfoCardProps> = ({ title, children }) => (
@@ -45,7 +46,8 @@ const CharacterView: React.FC = () => {
   const { site_title } = useSelector(getSettings)
 
   useEffect(() => {
-    if (data) document.title = `${data.name} - ${site_title}`
+    if (data)
+      document.title = `${['ja_JP', 'zh_CN', 'zh_TW'].includes(i18n.get()) ? data.name : data.romaji} - ${site_title}`
   }, [data, site_title])
 
   if (isLoading) return <Loading />
@@ -53,7 +55,7 @@ const CharacterView: React.FC = () => {
 
   return (
     <div>
-      <h1>角色详情页</h1>
+      <h1>{t`view.character.title`}</h1>
       <Flex justify="center" align="center" vertical>
         <Card hoverable className="card cardFixed">
           {data.hitokoto ? <div className={styles.hitokoto}>『{data.hitokoto}』</div> : null}
@@ -61,7 +63,7 @@ const CharacterView: React.FC = () => {
             <>
               <br />
               <iframe
-                title="主题曲"
+                title={t`view.character.themeSong`}
                 width="330"
                 height="86"
                 src={`https://music.163.com/outchain/player?auto=1&type=2&id=${data.songId}&height=66`}
@@ -81,26 +83,32 @@ const CharacterView: React.FC = () => {
             <div>{data.name}</div>
             <div>{data.romaji}</div>
           </div>
-          <Descriptions layout="vertical" title="详细信息">
+          <Descriptions layout="vertical" title={t`view.character.details`}>
             {data.gender !== 'FEMALE' && (
-              <Descriptions.Item label="性别">{GenderReflect[data.gender]}</Descriptions.Item>
+              <Descriptions.Item label={t`view.character.gender`}>{GenderReflect[data.gender]}</Descriptions.Item>
             )}
-            {data.alias && <Descriptions.Item label="别名">{data.alias.join('、')}</Descriptions.Item>}
-            {data.age && <Descriptions.Item label="年龄">{data.age}</Descriptions.Item>}
+            {data.alias && (
+              <Descriptions.Item label={t`view.character.alias`}>{data.alias.join('、')}</Descriptions.Item>
+            )}
+            {data.age && <Descriptions.Item label={t`view.character.age`}>{data.age}</Descriptions.Item>}
             {data.birthday && (
-              <Descriptions.Item label="出生日期">
-                {new Date(data.birthday).getMonth() + 1}月{new Date(data.birthday).getDate()}日
+              <Descriptions.Item label={t`view.character.birthday`}>
+                {new Date(data.birthday).getMonth() + 1}, {new Date(data.birthday).getDate()}
               </Descriptions.Item>
             )}
-            <Descriptions.Item label="来源作品">{data.series}</Descriptions.Item>
-            <Descriptions.Item label="作品类型">{SeriesGenreReflect[data.seriesGenre]}</Descriptions.Item>
+            <Descriptions.Item label={t`view.character.sourceSeries`}>{data.series}</Descriptions.Item>
+            <Descriptions.Item label={t`view.character.seriesType`}>
+              {SeriesGenreReflect[data.seriesGenre]}
+            </Descriptions.Item>
 
-            {data.voice && <Descriptions.Item label="声优">{data.voice}</Descriptions.Item>}
-            {data.bloodType && <Descriptions.Item label="血型">{data.bloodType} 型</Descriptions.Item>}
-            {data.height && <Descriptions.Item label="身高">{data.height}cm</Descriptions.Item>}
-            {data.weight && <Descriptions.Item label="体重">{data.weight}kg</Descriptions.Item>}
+            {data.voice && <Descriptions.Item label={t`view.character.voiceActor`}>{data.voice}</Descriptions.Item>}
+            {data.bloodType && (
+              <Descriptions.Item label={t`view.character.bloodType`}>{data.bloodType}</Descriptions.Item>
+            )}
+            {data.height && <Descriptions.Item label={t`view.character.height`}>{data.height}cm</Descriptions.Item>}
+            {data.weight && <Descriptions.Item label={t`view.character.weight`}>{data.weight}kg</Descriptions.Item>}
             {(data.bust || data.waist || data.hip) && (
-              <Descriptions.Item label="三围">
+              <Descriptions.Item label={t`view.character.measurements`}>
                 {(() => {
                   let content = ''
                   if (data.bust) content += `B${data.bust}`
@@ -111,9 +119,9 @@ const CharacterView: React.FC = () => {
               </Descriptions.Item>
             )}
           </Descriptions>
-          {data.description && <InfoCard title="我是谁">{data.description}</InfoCard>}
+          {data.description && <InfoCard title={t`view.character.whoAmI`}>{data.description}</InfoCard>}
           {data.tags && data.tags.length > 0 && (
-            <InfoCard title="我的萌点">
+            <InfoCard title={t`view.character.myCharmPoints`}>
               {data.tags.map((value, index) => (
                 <Tag key={Number(index)} color={getRandomColor()}>
                   {value}
@@ -121,9 +129,9 @@ const CharacterView: React.FC = () => {
               ))}
             </InfoCard>
           )}
-          {data.comment ? <InfoCard title="站长评价">{data.comment}</InfoCard> : null}
+          {data.comment ? <InfoCard title={t`view.character.adminComment`}>{data.comment}</InfoCard> : null}
           {data.url && data.url.length > 0 && (
-            <InfoCard title="相关链接">
+            <InfoCard title={t`view.character.relatedLinks`}>
               {(data.url as string[]).map((item, index) => (
                 <li key={Number(index)}>
                   <a href={item} target="_blank" rel="noreferrer">

@@ -13,7 +13,7 @@ export type MoehubDataCharacterHandle = Omit<MoehubDataCharacterSubmit, 'birthda
 }
 
 export function handleMoehubDataCharacter(values: MoehubDataCharacterHandle): MoehubDataCharacterSubmit {
-  console.log(values.color)
+  // console.log(values.color)
   return {
     ...values,
     color: values.color ? (values.color.cleared === false ? values.color.toHex() : '') : undefined,
@@ -66,7 +66,7 @@ const items = (isDisabled: boolean, tags?: { label: string; value: string }[]) =
     label: t`com.characterForm.label.2`,
     children: (
       <>
-        <Form.Item name="alias" label={t`com.characterForm.images.alias`}>
+        <Form.Item name="alias" label={t`com.characterForm.alias`}>
           <Select mode="tags" />
         </Form.Item>
         <Form.Item label={t`com.characterForm.images`}>
@@ -78,26 +78,26 @@ const items = (isDisabled: boolean, tags?: { label: string; value: string }[]) =
             )}
           </ListForm>
         </Form.Item>
-        <Form.Item name="description" label="描述">
+        <Form.Item name="description" label={t`com.characterForm.description`}>
           <Input.TextArea rows={3} />
         </Form.Item>
-        <Form.Item name="hitokoto" label="一言">
+        <Form.Item name="hitokoto" label={t`com.characterForm.hitokoto`}>
           <Input />
         </Form.Item>
-        <Form.Item name="birthday" label="生日">
+        <Form.Item name="birthday" label={t`com.characterForm.birthday`}>
           <DatePicker format="MM-DD" />
         </Form.Item>
-        <Form.Item name="comment" label="评价">
+        <Form.Item name="comment" label={t`com.characterForm.comment`}>
           <Input.TextArea rows={3} />
         </Form.Item>
-        <Form.Item name="tags" label="萌点">
+        <Form.Item name="tags" label={t`com.characterForm.tags`}>
           <Select mode="tags" options={tags ?? []} />
         </Form.Item>
-        <Form.Item name="color" label="代表色">
+        <Form.Item name="color" label={t`com.characterForm.color`}>
           <ColorPicker showText allowClear />
         </Form.Item>
-        <Form.Item name="songId" label="主题曲">
-          <InputNumber placeholder="请输入网易云歌曲 ID，如：2077744392" min="1" />
+        <Form.Item name="songId" label={t`com.characterForm.songId`}>
+          <InputNumber placeholder={t`com.characterForm.songId.placeholder`} min="1" />
         </Form.Item>
       </>
     )
@@ -107,49 +107,52 @@ const items = (isDisabled: boolean, tags?: { label: string; value: string }[]) =
     label: t`com.characterForm.label.3`,
     children: (
       <>
-        <Form.Item name="voice" label="声优">
+        <Form.Item name="voice" label={t`com.characterForm.voice`}>
           <Input />
         </Form.Item>
-        <Form.Item name="age" label="年龄" rules={[{ type: 'number' }]}>
+        <Form.Item name="age" label={t`com.characterForm.age`} rules={[{ type: 'number' }]}>
           <InputNumber min={1} />
         </Form.Item>
-        <Form.Item name="height" label="身高" rules={[{ type: 'number' }]}>
+        <Form.Item name="height" label={t`com.characterForm.height`} rules={[{ type: 'number' }]}>
           <InputNumber min={1} />
         </Form.Item>
-        <Form.Item name="weight" label="体重" rules={[{ type: 'number' }]}>
+        <Form.Item name="weight" label={t`com.characterForm.weight`} rules={[{ type: 'number' }]}>
           <InputNumber min={1} />
         </Form.Item>
-        <Form.Item name="bust" label="胸围" rules={[{ type: 'number' }]}>
+        <Form.Item name="bust" label={t`com.characterForm.bust`} rules={[{ type: 'number' }]}>
           <InputNumber min={1} />
         </Form.Item>
-        <Form.Item name="waist" label="腰围" rules={[{ type: 'number' }]}>
+        <Form.Item name="waist" label={t`com.characterForm.waist`} rules={[{ type: 'number' }]}>
           <InputNumber min={1} />
         </Form.Item>
-        <Form.Item name="hip" label="臀围" rules={[{ type: 'number' }]}>
+        <Form.Item name="hip" label={t`com.characterForm.hip`} rules={[{ type: 'number' }]}>
           <InputNumber min={1} />
         </Form.Item>
-        <Form.Item name="hairColor" label="发色">
+        <Form.Item name="hairColor" label={t`com.characterForm.hairColor`}>
           <Input />
         </Form.Item>
-        <Form.Item name="eyeColor" label="瞳色">
+        <Form.Item name="eyeColor" label={t`com.characterForm.eyeColor`}>
           <Input />
         </Form.Item>
-        <Form.Item name="bloodType" label="血型">
+        <Form.Item name="bloodType" label={t`com.characterForm.bloodType`}>
           <Radio.Group>
-            <Radio value="A">A 型</Radio>
-            <Radio value="B">B 型</Radio>
-            <Radio value="AB">AB 型</Radio>
-            <Radio value="O">O 型</Radio>
+            <Radio value="A">{t`com.characterForm.bloodType.A`}</Radio>
+            <Radio value="B">{t`com.characterForm.bloodType.B`}</Radio>
+            <Radio value="AB">{t`com.characterForm.bloodType.AB`}</Radio>
+            <Radio value="O">{t`com.characterForm.bloodType.O`}</Radio>
           </Radio.Group>
         </Form.Item>
-        <Form.Item name="url" label="相关链接">
+        <Form.Item name="url" label={t`com.characterForm.url`}>
           <Select mode="tags" />
         </Form.Item>
-        <Form.Item name="order" label="权重（值越小排列越靠前）" rules={[{ type: 'number' }]}>
+        <Form.Item name="order" label={t`com.characterForm.order`} rules={[{ type: 'number' }]}>
           <InputNumber min={1} />
         </Form.Item>
-        <Form.Item name="hide" label="是否隐藏">
-          <Switch checkedChildren="隐藏" unCheckedChildren="显示" />
+        <Form.Item name="hide" label={t`com.characterForm.hide`}>
+          <Switch
+            checkedChildren={t`com.characterForm.hide.checked`}
+            unCheckedChildren={t`com.characterForm.hide.unchecked`}
+          />
         </Form.Item>
       </>
     )

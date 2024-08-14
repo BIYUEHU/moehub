@@ -1,17 +1,26 @@
-# moehub
+<!-- markdownlint-disable -->
 
-Your anime character collection gallery, easily build, freely share.
+<div align="center">
+<img src="./packages/client/public/favicon.png" alt="logo"/>
+
+# MoeHub
+
+⚡ A modern and universal Meta-Framework to construct other frameworks. ⚡
+
+</div>
 
 ## Example
 
-> [👉 There](https://hotaru.icu/moehub.html)
+> [👉 There](https://m.hotaru.icu)
+
+## Usage
 
 ## Stacks
 
-- Frontend: React, tailwind-css
-- Backend: Node.js, Koa.js, Prisma
+- Frontend: React, tailwind-css, @kotori-bot/i18n
+- Backend: Node.js, Koa.js, Prisma, @kotori-bot/core
 - Database: Mysql
 - CI/CD: Github Actions
-- Code Style: ESLint, Prettier
+- Code Style: BiomeJs
 - Version Control: Git, GitHub
 - Project Management: pnpm workspace

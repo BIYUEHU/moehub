@@ -1,5 +1,6 @@
 import React, { lazy } from 'react'
 import Loading from '@/components/Loading'
+import { t } from '@/i18n'
 
 export interface RouteConfig {
   path: string
@@ -23,69 +24,64 @@ const routes: RouteConfig[] = [
   {
     path: '/',
     component: lazyLoader(() => import('@/views/Home')),
-    title: '首页'
+    title: t`view.home.title`
   },
   {
     path: '/character/:id',
     component: lazyLoader(() => import('@/views/Character')),
-    title: '角色详情'
+    title: t`view.character.title`
   },
   {
     path: '/photos',
     component: lazyLoader(() => import('@/views/Photos')),
-    title: '相册'
-  },
-  {
-    path: '/about',
-    component: lazyLoader(() => import('@/views/About')),
-    title: '关于'
+    title: t`view.photos.title`
   },
   {
     path: '/admin',
     component: lazyLoader(() => import('@/views/Admin')),
-    title: '管理中心',
+    title: t`view.admin.title`,
     isPrivate: true
   },
   {
     path: '/admin/login',
     component: lazyLoader(() => import('@/views/Admin/Login')),
-    title: '后台登录'
+    title: t`view.login.title`
   },
   {
     path: '/admin/settings',
 
     component: lazyLoader(() => import('@/views/Admin/Settings')),
-    title: '系统设置',
+    title: t`view.settings.systemSettings`,
     isPrivate: true
   },
   {
     path: '/admin/password',
     component: lazyLoader(() => import('@/views/Admin/Password')),
-    title: '密码修改',
+    title: t`view.password.changePassword`,
     isPrivate: true
   },
   {
     path: '/admin/list',
     component: lazyLoader(() => import('@/views/Admin/List')),
-    title: '角色列表',
+    title: t`view.characterList.title`,
     isPrivate: true
   },
   {
     path: '/admin/create',
     component: lazyLoader(() => import('@/views/Admin/Create')),
-    title: '角色创建',
+    title: t`view.characterCreate.title`,
     isPrivate: true
   },
   {
     path: '/admin/edit/:id',
     component: lazyLoader(() => import('@/views/Admin/Edit')),
-    title: '角色编辑',
+    title: t`view.characterEdit.title`,
     isPrivate: true
   },
   {
     path: '/admin/imgs',
     component: lazyLoader(() => import('@/views/Admin/Imgs')),
-    title: '图片上传',
+    title: t`view.imgs.imageUpload`,
     isPrivate: true
   },
   {

@@ -5,6 +5,7 @@ import { LockOutlined, UserOutlined } from '@ant-design/icons'
 import { useDispatch, useSelector } from 'react-redux'
 import { getToken, login } from '@/store/adminReducer'
 import { postLogin } from '@/http'
+import { t } from '@/i18n'
 
 interface LoginData {
   email: string
@@ -26,28 +27,28 @@ const LoginView: React.FC = () => {
     try {
       const { token } = await postLogin(email, password)
       dispatch(login(token))
-      notification.success({ message: '登录成功' })
+      notification.success({ message: t`view.login.success` })
     } catch {
-      notification.error({ message: '用户名或密码错误' })
+      notification.error({ message: t`view.login.error` })
     }
   }
 
   return (
     <div>
-      <h1>后台登录</h1>
+      <h1>{t`view.login.title`}</h1>
       <Flex justify="center" align="center" vertical>
         <Card hoverable className="card cardFixed cleanAll cardSquare">
           <Form form={form} name="horizontal_login" onFinish={onSubmit}>
-            <Form.Item name="email" label="邮箱" rules={[{ required: true }]}>
+            <Form.Item name="email" label={t`view.login.email`} rules={[{ required: true }]}>
               <Input prefix={<UserOutlined className="site-form-item-icon" />} />
             </Form.Item>
-            <Form.Item name="password" label="密码" rules={[{ required: true }]}>
+            <Form.Item name="password" label={t`view.login.password`} rules={[{ required: true }]}>
               <Input prefix={<LockOutlined className="site-form-item-icon" />} type="password" />
             </Form.Item>
             <br />
             <Form.Item shouldUpdate>
               <Button type="primary" htmlType="submit" className="cardButton">
-                登录
+                {t`view.login.button`}
               </Button>
             </Form.Item>
           </Form>

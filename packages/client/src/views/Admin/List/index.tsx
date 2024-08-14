@@ -8,13 +8,14 @@ import Loading from '@/components/Loading'
 import ErrorResult from '@/components/result/error'
 import styles from './styles.module.css'
 import useSWR from 'swr'
+import { t } from '@/i18n'
 
 const ListView: React.FC = () => {
   const { data, isLoading } = useSWR('/api/character', getCharacters)
 
   return (
     <div>
-      <h1>角色列表</h1>
+      <h1>{t`view.characterList.title`}</h1>
       <Flex justify="center" align="center" vertical wrap>
         <Card hoverable className="card cardFixed">
           {data ? (
@@ -22,41 +23,39 @@ const ListView: React.FC = () => {
               dataSource={data.map((data) => ({ ...data, key: data.id })).sort((el1, el2) => el1.order - el2.order)}
               className={`${styles.table} cleanAll`}
             >
-              <ColumnGroup title="角色名">
-                <Column title="原名" dataIndex="name" key="name" />
-                <Column title="罗马音" dataIndex="romaji" key="romaji" />
+              <ColumnGroup title={t`view.characterList.column.characterName`}>
+                <Column title={t`view.characterList.column.originalName`} dataIndex="name" key="name" />
+                <Column title={t`view.characterList.column.romaji`} dataIndex="romaji" key="romaji" />
               </ColumnGroup>
 
-              <ColumnGroup title="来源" responsive={['md']}>
-                <Column title="作品" dataIndex="series" key="series" />
-                <Column title="类型" dataIndex="seriesGenre" key="seriesGenre" />
+              <ColumnGroup title={t`view.characterList.column.source`} responsive={['md']}>
+                <Column title={t`view.characterList.column.series`} dataIndex="series" key="series" />
+                <Column title={t`view.characterList.column.type`} dataIndex="seriesGenre" key="seriesGenre" />
               </ColumnGroup>
-              <Column title="创建时间" responsive={['md']} dataIndex="createdAt" key="createdAt" />
               <Column
-                title="操作"
+                title={t`view.characterList.column.createdAt`}
+                responsive={['md']}
+                dataIndex="createdAt"
+                key="createdAt"
+              />
+              <Column
+                title={t`view.characterList.column.actions`}
                 key="name"
                 render={(_, data: MoehubDataCharacter) => (
                   <Space size="middle">
-                    <Link to={`/admin/edit/${data.id}`}>编辑</Link>
-                    {/* <span
-                      onClick={() =>
-                        updateCharacter(data.id, handleMoehubDataCharacter({ ...data, hide: !data.hide })).then(() =>
-                          notification.success({ message: `角色${!data.hide ? '隐藏' : '显示'}成功！` })
+                    <Link to={`/admin/edit/${data.id}`}>{t`view.characterList.action.edit`}</Link>
+                    <Popconfirm
+                      title={t`view.characterList.delete.title`}
+                      description={t`view.characterList.delete.description`}
+                      onConfirm={() =>
+                        deleteCharacter(data.id).then(() =>
+                          notification.success({ message: t`view.characterList.delete.success` })
                         )
                       }
+                      okText={t`view.characterList.delete.confirm`}
+                      cancelText={t`view.characterList.delete.cancel`}
                     >
-                      {data.hide ? '隐藏' : '显示'}`
-                    </span> */}
-                    <Popconfirm
-                      title="删除角色"
-                      description="确定要删除这个角色吗?"
-                      onConfirm={() =>
-                        deleteCharacter(data.id).then(() => notification.success({ message: '角色删除成功！' }))
-                      }
-                      okText="Yes"
-                      cancelText="No"
-                    >
-                      <span>删除</span>
+                      <span>{t`view.characterList.action.delete`}</span>
                     </Popconfirm>
                   </Space>
                 )}

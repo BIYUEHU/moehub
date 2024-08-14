@@ -5,7 +5,11 @@
   "main": "dist/index.js",
   "license": "GPL-3.0",
   "author": "Romi <biyuehuya@gmail.com>",
+  "scripts": {
+    "build": "tsup --define.env=prod"
+  },
   "keywords": ["anime", "character", "gallery", "share", "acg", "server", "bot", "web", "back-end"],
+  "files": ["dist"],
   "bugs": {
     "url": "https://github.com/biyuehu/moehub/issues"
   },

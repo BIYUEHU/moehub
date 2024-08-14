@@ -8,8 +8,15 @@ import { useEffect } from 'react'
 import ErrorResult from './components/result/error'
 import Loading from './components/Loading'
 import { loadSettings } from './store/settingsReducer'
+import { getLanguage } from './store/adminReducer'
+import store from './store'
+import i18n from './i18n'
 
 function App() {
+  const language = getLanguage(store.getState())
+
+  i18n.set(language)
+
   const dispatch = useDispatch()
   const { data, error } = useSWR('/api/settings', getSettings)
 

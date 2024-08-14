@@ -1,18 +1,9 @@
 import type { Response } from 'koa'
-import {
-  controller,
-  httpGet,
-  type interfaces,
-  response,
-  httpPut,
-  requestBody,
-  httpPost,
-  requestParam
-} from 'inversify-koa-utils'
+import { controller, httpGet, type interfaces, response, httpPut, requestBody, httpPost } from 'inversify-koa-utils'
 import { inject, injectable } from 'inversify'
 import { Symbols } from '../../container'
 import type SettingsService from '../service/settings.service'
-import { UpdateLoginSchema, loginSchema, settingsSchema } from '@moehub/common'
+import { UpdateLoginSchema, loginSchema, settingsSchema } from '../../../../common/src'
 import Auth from '../../utils/auth'
 import type { Context } from 'koa'
 import config from '../../config'
@@ -51,9 +42,10 @@ class SettingsController implements interfaces.Controller {
     ctx.response.status = 204
   }
 
-  @httpPost('/email/:target', Auth.middleware())
-  public async emailPost(@requestParam('target') target: string) {
-    await this.service.email(target)
+  @httpPost('/email', Auth.middleware())
+  public async emailPost(@response() res: Response) {
+    await this.service.email()
+    res.status = 204
   }
 
   @httpPost(
@@ -83,7 +75,7 @@ class SettingsController implements interfaces.Controller {
     }))
   }
 
-  @httpGet('/imgs/', Auth.middleware())
+  @httpGet('/imgs/')
   public imgsGey(@response() res: Response) {
     res.body = this.service.allImages()
   }

@@ -8,6 +8,7 @@ import styles from './styles.module.css'
 import useSWR from 'swr'
 import { getSettings } from '@/store/settingsReducer'
 import { useSelector } from 'react-redux'
+import { t } from '@/i18n'
 
 function renderLinkBlock(link: string, text: string) {
   return (
@@ -36,13 +37,13 @@ const HomeView: React.FC = () => {
 
   return (
     <div>
-      <h1>主页</h1>
+      <h1>{t`view.home.title`}</h1>
       <Flex justify="center" wrap>
         <Card className={`card ${styles.card}`}>
           {/* biome-ignore lint: */}
           <span dangerouslySetInnerHTML={{ __html: home_description }} />
           <h2>
-            <strong>关于我</strong>
+            <strong>{t`view.home.aboutMe`}</strong>
           </h2>
           <div className="cardList">
             {home_buttons.map(([text, link], index) => (
@@ -52,7 +53,7 @@ const HomeView: React.FC = () => {
         </Card>
         <Card className={`card ${styles.card}`}>
           <h2>
-            <strong>时间线</strong>
+            <strong>{t`view.home.timeline`}</strong>
           </h2>
           <ul>
             {Array.from(home_timeline)
@@ -69,7 +70,7 @@ const HomeView: React.FC = () => {
         </Card>
       </Flex>
 
-      <h1>角色列表</h1>
+      <h1>{t`view.home.characterList`}</h1>
       <Flex justify="center" wrap className={styles.characterList}>
         {data
           .filter((item) => Array.isArray(item.images) && item.images.length > 0)

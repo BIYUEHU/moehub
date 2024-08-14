@@ -3,37 +3,38 @@ import type { MoehubDataSettings, MoehubDataSettingsSubmit } from '@moehub/commo
 import { useDispatch, useSelector } from 'react-redux'
 import { getSettings, loadSettings } from '@/store/settingsReducer'
 import { useEffect } from 'react'
-import { updateSettings } from '@/http'
+import { postEmail, updateSettings } from '@/http'
 import { useNavigate } from 'react-router-dom'
 import ListForm from '@/components/ListForm'
+import { t } from '@/i18n'
 
-const items = (isSame: boolean) => [
+const items = (isSame: boolean, testEmail: () => void) => [
   {
     key: '1',
-    label: '网站设置',
+    label: t`view.settings.websiteSettings`,
     children: (
       <>
-        <Form.Item name="site_title" label="网站标题" rules={[{ required: true }]}>
+        <Form.Item name="site_title" label={t`view.settings.siteTitle`} rules={[{ required: true }]}>
           <Input />
         </Form.Item>
-        <Form.Item name="site_name" label="网站名称" rules={[{ required: true }]}>
+        <Form.Item name="site_name" label={t`view.settings.siteName`} rules={[{ required: true }]}>
           <Input />
         </Form.Item>
-        <Form.Item name="site_url" label="网站地址" rules={[{ required: true }]}>
+        <Form.Item name="site_url" label={t`view.settings.siteUrl`} rules={[{ required: true }]}>
           <Input />
         </Form.Item>
 
         {isSame ? null : (
           <>
-            <Alert message="当前网站地址与网站设置中的地址不一致" type="warning" showIcon closable />
+            <Alert message={t`view.settings.urlMismatchWarning`} type="warning" showIcon closable />
             <br />
           </>
         )}
-        <Form.Item name="site_logo" label="网站 Logo" rules={[{ required: true }]}>
+        <Form.Item name="site_logo" label={t`view.settings.siteLogo`} rules={[{ required: true }]}>
           <Input />
         </Form.Item>
-        <Form.Item label="网站背景">
-          <ListForm name="site_backgrounds" addButtonText="添加图片">
+        <Form.Item label={t`view.settings.siteBackground`}>
+          <ListForm name="site_backgrounds" addButtonText={t`view.settings.addImage`}>
             {(name) => (
               <Form.Item name={name} rules={[{ required: true }]}>
                 <Input />
@@ -46,41 +47,41 @@ const items = (isSame: boolean) => [
   },
   {
     key: '2',
-    label: '主页设置',
+    label: t`view.settings.homepageSettings`,
     children: (
       <>
-        <Form.Item name="home_description" label="主页描述">
+        <Form.Item name="home_description" label={t`view.settings.homepageDescription`}>
           <Input.TextArea rows={3} />
         </Form.Item>
-        <Form.Item label="主页按钮">
-          <ListForm name="home_buttons" addButtonText="添加按钮">
+        <Form.Item label={t`view.settings.homepageButtons`}>
+          <ListForm name="home_buttons" addButtonText={t`view.settings.addButton`}>
             {(key) => (
               <>
                 <Form.Item name={[key, '0']} rules={[{ required: true }]}>
-                  <Input placeholder="按钮文字" />
+                  <Input placeholder={t`view.settings.buttonText`} />
                 </Form.Item>
                 <Form.Item name={[key, '1']} rules={[{ required: true }]}>
-                  <Input placeholder="按钮链接" />
+                  <Input placeholder={t`view.settings.buttonLink`} />
                 </Form.Item>
               </>
             )}
           </ListForm>
         </Form.Item>
-        <Form.Item label="主页时间线">
-          <ListForm name="home_timeline" addButtonText="添加记录">
+        <Form.Item label={t`view.settings.homepageTimeline`}>
+          <ListForm name="home_timeline" addButtonText={t`view.settings.addRecord`}>
             {(key) => (
               <>
                 <Form.Item name={[key, '0']} rules={[{ required: true }]}>
-                  <Input placeholder="时间" />
+                  <Input placeholder={t`view.settings.time`} />
                 </Form.Item>
                 <Form.Item name={[key, '1']} rules={[{ required: true }]}>
-                  <Input placeholder="内容" />
+                  <Input placeholder={t`view.settings.content`} />
                 </Form.Item>
               </>
             )}
           </ListForm>
         </Form.Item>
-        <Form.Item name="home_custom" label="主页自定义 HTML">
+        <Form.Item name="home_custom" label={t`view.settings.homepageCustomHtml`}>
           <Input.TextArea rows={5} />
         </Form.Item>
       </>
@@ -88,22 +89,22 @@ const items = (isSame: boolean) => [
   },
   {
     key: '3',
-    label: '高级设置',
+    label: t`view.settings.advancedSettings`,
     children: (
       <>
-        <Form.Item name="admin_username" label="管理员用户名" rules={[{ required: true }]}>
+        <Form.Item name="admin_username" label={t`view.settings.adminUsername`} rules={[{ required: true }]}>
           <Input />
         </Form.Item>
-        <Form.Item name="admin_email" label="管理员邮箱" rules={[{ required: true }]}>
+        <Form.Item name="admin_email" label={t`view.settings.adminEmail`} rules={[{ required: true }]}>
           <Input />
         </Form.Item>
-        <Form.Item name="custom_head_code" label="自定义头部代码">
+        <Form.Item name="custom_head_code" label={t`view.settings.customHeadCode`}>
           <Input.TextArea rows={5} />
         </Form.Item>
-        <Form.Item name="custom_foot_code" label="自定义脚部代码">
+        <Form.Item name="custom_foot_code" label={t`view.settings.customFootCode`}>
           <Input.TextArea rows={5} />
         </Form.Item>
-        <Form.Item name="google_analytics_id" label="Google Analytics ID">
+        <Form.Item name="google_analytics_id" label={t`view.settings.googleAnalyticsId`}>
           <Input />
         </Form.Item>
       </>
@@ -111,33 +112,40 @@ const items = (isSame: boolean) => [
   },
   {
     key: '4',
-    label: '邮箱设置',
+    label: t`view.settings.emailSettings`,
     children: (
       <>
-        <Form.Item name="birthdays" label="发送角色生日提醒" rules={[{ required: true }]}>
-          <Switch checkedChildren="开启" unCheckedChildren="关闭" defaultChecked />
+        <Form.Item name="birthdays" label={t`view.settings.sendBirthdayReminders`} rules={[{ required: true }]}>
+          <Switch
+            checkedChildren={t`view.settings.enabled`}
+            unCheckedChildren={t`view.settings.disabled`}
+            defaultChecked
+          />
         </Form.Item>
-        <Form.Item name="smtp_host" label="SMTP 主机">
+        <Form.Item name="smtp_host" label={t`view.settings.smtpHost`}>
           <Input />
         </Form.Item>
-        <Form.Item name="smtp_port" label="SMTP 端口">
+        <Form.Item name="smtp_port" label={t`view.settings.smtpPort`}>
           <InputNumber max={65535} min={1} />
         </Form.Item>
-        <Form.Item name="smtp_email" label="邮箱">
+        <Form.Item name="smtp_email" label={t`view.settings.email`}>
           <Input />
         </Form.Item>
-        <Form.Item name="smtp_key" label="密钥">
+        <Form.Item name="smtp_key" label={t`view.settings.key`}>
           <Input />
         </Form.Item>
-        <Form.Item name="smtp_hours" label="发信整点小时（0 ~ 23）">
+        <Form.Item name="smtp_hours" label={t`view.settings.sendingHour`}>
           <InputNumber max={23} min={0} />
         </Form.Item>
-        <Form.Item name="smtp_target" label="目标邮箱">
+        <Form.Item name="smtp_target" label={t`view.settings.targetEmail`}>
           <Input />
         </Form.Item>
-        <Form.Item name="smtp_template" label="发信模板（支持角色信息变量）">
+        <Form.Item name="smtp_template" label={t`view.settings.emailTemplate`}>
           <Input.TextArea rows={5} />
         </Form.Item>
+        <Button type="primary" className="cardButton" onClick={testEmail}>
+          {t`view.settings.testEmail`}
+        </Button>
       </>
     )
   }
@@ -162,25 +170,30 @@ const SettingsView: React.FC = () => {
     }
 
     await updateSettings(data)
-    notification.success({ message: '保存成功' })
+    notification.success({ message: t`view.settings.saveSuccess` })
     dispatch(loadSettings(data))
     setTimeout(() => {
       navigate(0)
     }, 500)
   }
 
+  async function testEmail() {
+    await postEmail()
+    notification.success({ message: t`view.settings.testEmailSuccess` })
+  }
+
   return (
     <div>
-      <h1>系统设置</h1>
+      <h1>{t`view.settings.systemSettings`}</h1>
       <Flex justify="center" align="center" vertical>
         <Card hoverable className="card cardFixed">
           <Form form={form} name="control-hooks" className="cardForm cleanAll" onFinish={onSubmit}>
-            <Tabs defaultActiveKey="1" items={items(new URL(location.href).origin === settings.site_url)} />
+            <Tabs defaultActiveKey="1" items={items(new URL(location.href).origin === settings.site_url, testEmail)} />
             <br />
             <Form.Item>
               <Space>
                 <Button type="primary" htmlType="submit" className="cardButton">
-                  保存设置
+                  {t`view.settings.saveSettings`}
                 </Button>
               </Space>
             </Form.Item>

@@ -8,8 +8,12 @@ i18n.use(locales.ja_JP, 'ja_JP')
 i18n.use(locales.zh_TW, 'zh_TW')
 i18n.use(locales.zh_CN, 'zh_CN')
 
-i18n.set('zh_CN')
-
 export const t = i18n.t.bind(i18n)
+
+export const f = (locale: string, ...params: string[]) => {
+  let result = i18n.locale(locale)
+  for (const [index, value] of params.entries()) result = result.replaceAll(`{${index}}`, value)
+  return result
+}
 
 export default i18n

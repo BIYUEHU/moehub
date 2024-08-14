@@ -1,6 +1,6 @@
 import { ContainerModule } from 'inversify'
 import { InversifyKoaServer, TYPE, type interfaces } from 'inversify-koa-utils'
-import type { MoehubDataSettings } from '@moehub/common'
+import type { MoehubDataSettings } from '../../../common/src'
 import { PrismaClient } from '@prisma/client'
 import Logging from '@kotori-bot/logger'
 import { Symbols } from './symbols'

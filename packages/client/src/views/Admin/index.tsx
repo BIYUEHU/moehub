@@ -9,6 +9,7 @@ import useSWR from 'swr'
 import { getCharacters, getCollections } from '@/http'
 import ErrorResult from '@/components/result/error'
 import Loading from '@/components/Loading'
+import { f, t } from '@/i18n'
 
 const AdminView: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -47,71 +48,82 @@ const AdminView: React.FC = () => {
 
   return (
     <div>
-      <h1>管理中心</h1>
+      <h1>{t`view.admin.title`}</h1>
       <Flex justify="center" align="center" vertical wrap>
         <Card hoverable className="card cardFixed">
-          <h2>
-            欢迎来到管理后台，<strong>{admin_username}</strong>！
-          </h2>
-          <h2>在这里，你可以：</h2>
+          {/* biome-ignore lint: */}
+          <h2 dangerouslySetInnerHTML={{ __html: f('view.admin.welcome', admin_username) }} />
+          <h2>{t`view.admin.canDo`}</h2>
           <Flex justify="center" className="cardList" wrap>
             <Link to="./settings">
               <Button className="cardButton" ghost>
-                系统设置
+                {t`view.admin.button.settings`}
               </Button>
             </Link>
             <Link to="./password">
               <Button className="cardButton" ghost>
-                修改密码
+                {t`view.admin.button.changePassword`}
               </Button>
             </Link>
             <Link to="./list">
               <Button className="cardButton" ghost>
-                查看角色
+                {t`view.admin.button.viewCharacters`}
               </Button>
             </Link>
             <Link to="./create">
               <Button className="cardButton" ghost>
-                创建角色
+                {t`view.admin.button.createCharacter`}
               </Button>
             </Link>
             <Link to="./imgs">
               <Button className="cardButton" ghost>
-                上传图片
+                {t`view.admin.button.uploadImages`}
               </Button>
             </Link>
             <Button className="cardButton" ghost onClick={() => setIsModalOpen(true)}>
-              退出登录
+              {t`view.admin.button.logout`}
             </Button>
             <Modal
-              title="确认框"
+              title={t`view.admin.modal.title`}
               open={isModalOpen}
               onOk={logoutOk}
               onCancel={() => setIsModalOpen(false)}
-              okText="确定"
-              cancelText="取消"
+              okText={t`view.admin.modal.ok`}
+              cancelText={t`view.admin.modal.cancel`}
             >
-              <p>确定要退出登录吗？</p>
+              <p>{t`view.admin.modal.content`}</p>
             </Modal>
           </Flex>
         </Card>
         <Card hoverable className="card cardFixed" style={{ margin: 10 }}>
-          <h2>仪表盘</h2>
+          <h2>{t`view.admin.dashboard.title`}</h2>
           <Row gutter={16}>
             {characters && collections ? (
               <>
                 {' '}
                 <Col span={12}>
-                  <Statistic title="角色数" value={characterTotal} prefix={<FireOutlined />} />
+                  <Statistic
+                    title={t`view.admin.dashboard.characterCount`}
+                    value={characterTotal}
+                    prefix={<FireOutlined />}
+                  />
                 </Col>
                 <Col span={12}>
-                  <Statistic title="标签数" value={tagsTotal} prefix={<BookOutlined />} />
+                  <Statistic title={t`view.admin.dashboard.tagCount`} value={tagsTotal} prefix={<BookOutlined />} />
                 </Col>
                 <Col span={12}>
-                  <Statistic title="作品数" value={seriesTotal} prefix={<TagsOutlined />} />
+                  <Statistic
+                    title={t`view.admin.dashboard.seriesCount`}
+                    value={seriesTotal}
+                    prefix={<TagsOutlined />}
+                  />
                 </Col>
                 <Col span={12}>
-                  <Statistic title="收藏数" value={collectionTotal} prefix={<StarOutlined />} />
+                  <Statistic
+                    title={t`view.admin.dashboard.collectionCount`}
+                    value={collectionTotal}
+                    prefix={<StarOutlined />}
+                  />
                 </Col>
               </>
             ) : errorCharacters || errorCollections ? (

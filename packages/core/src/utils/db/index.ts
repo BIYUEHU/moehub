@@ -1,6 +1,6 @@
 import type { PrismaClient } from '@prisma/client'
 import { inject, injectable } from 'inversify'
-import type { MoehubDataCharacterInCollection, MoehubDataCharacterSubmit } from '@moehub/common'
+import type { MoehubDataCharacterInCollection, MoehubDataCharacterSubmit } from '../../../../common/src'
 import { Symbols } from '../../container'
 
 @injectable()

@@ -5,7 +5,7 @@ import { type Core, Symbols as KotoriSymbols, type ModuleExport } from '@kotori-
 import container, { Symbols } from '../../container'
 import type Database from '../db'
 import type SettingsService from '../../router/service/settings.service'
-import type { MoehubDataSettings } from '@moehub/common'
+import type { MoehubDataSettings } from '../../../../common/src'
 import { createTransport } from 'nodemailer'
 import type Logger from '../logger'
 import { resolve } from 'node:path'
@@ -183,7 +183,7 @@ export class Bot {
       }
     })
 
-    this.logger.info(`Set email notify successfully,will send the mail at ${smtp_hours} o'clock.`)
+    this.logger.info(`Set email notify successfully, will send the mail at ${smtp_hours} o'clock.`)
   }
 
   public sendMail(
@@ -193,30 +193,36 @@ export class Bot {
       smtp_host: host,
       smtp_key: pass,
       smtp_port: port,
-      smtp_target,
+      smtp_target: to,
       smtp_template
     }: MoehubDataSettings
   ) {
-    const title = `${character.birthday.getMonth() + 1} 月 ${character.birthday.getDate()} 日，${character.name} の誕生日！`
-    const message = smtp_template
-      .replaceAll('%name%', character.name)
-      .replaceAll('%romaji%', character.romaji)
-      .replaceAll('%month%', (character.birthday.getMonth() + 1).toString())
-      .replaceAll('%day%', character.birthday.getDate().toString())
+    try {
+      const subject = `${character.birthday.getMonth() + 1} 月 ${character.birthday.getDate()} 日，${character.name} の誕生日！`
+      const message = smtp_template
+        .replaceAll('%name%', character.name)
+        .replaceAll('%romaji%', character.romaji)
+        .replaceAll('%month%', (character.birthday.getMonth() + 1).toString())
+        .replaceAll('%day%', character.birthday.getDate().toString())
 
-    return createTransport({ host, port, secure: false, auth: { user, pass } }).sendMail({
-      from: user,
-      to: smtp_target,
-      subject: title,
-      html: /* html */ `
-      <html>
-        <body>
-          ${message}
-        </body>
-      </html>
-    `,
-      text: message.replace(/<[^>]*>?/gm, '')
-    })
+      createTransport({ host, port, secure: port === 465, auth: { user, pass } }).sendMail({
+        from: user,
+        to,
+        subject,
+        html: /* html */ `
+        <html>
+          <body>
+            ${message}
+          </body>
+        </html>
+      `,
+        text: message.replace(/<[^>]*>?/gm, '')
+      })
+
+      this.logger.info(`Send mail successfully, subject: ${subject}`)
+    } catch (e) {
+      this.logger.error(e)
+    }
   }
 }
 

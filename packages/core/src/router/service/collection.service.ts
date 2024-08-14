@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify'
 import { Symbols } from '../../container'
 import type Database from '../../utils/db'
-import type { MoehubDataCollectionSubmit, MoehubDataCollection } from '@moehub/common'
+import type { MoehubDataCollectionSubmit, MoehubDataCollection } from '../../../../common/src'
 import HttpError from '../../app/error'
 
 @injectable()

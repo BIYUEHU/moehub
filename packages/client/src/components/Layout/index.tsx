@@ -1,11 +1,11 @@
-import { Flex, Layout as AntLayout, Avatar } from 'antd'
-import { PictureOutlined, PoweroffOutlined } from '@ant-design/icons'
+import { Flex, Layout as AntLayout, Avatar, Button } from 'antd'
+import { PictureOutlined, PoweroffOutlined, TranslationOutlined } from '@ant-design/icons'
 import { Link, useNavigate } from 'react-router-dom'
 import styles from './styles.module.css'
 import { useEffect } from 'react'
-import { getToken } from '@/store/adminReducer'
+import { getToken, nextLanguage } from '@/store/adminReducer'
 import { getCurrentBackground, getSettings } from '@/store/settingsReducer'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 interface LayoutProps {
   title: string
@@ -14,6 +14,7 @@ interface LayoutProps {
 }
 
 const Layout: React.FC<LayoutProps> = ({ title, outlet, isPrivate }) => {
+  const dispatch = useDispatch()
   const navigate = useNavigate()
   const isLogged = useSelector(getToken)
   const settings = useSelector(getSettings)
@@ -42,6 +43,15 @@ const Layout: React.FC<LayoutProps> = ({ title, outlet, isPrivate }) => {
               </Link>
             </h1>
             <div>
+              <a
+                //  biome-ignore lint:
+                onClick={() => {
+                  dispatch(nextLanguage())
+                  navigate(0)
+                }}
+              >
+                <Avatar style={{ background: 'none', color: '#eee' }} icon={<TranslationOutlined />} />
+              </a>
               <Link to="/photos">
                 <Avatar style={{ background: 'none', color: '#eee' }} icon={<PictureOutlined />} />
               </Link>

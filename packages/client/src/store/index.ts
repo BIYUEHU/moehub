@@ -1,5 +1,4 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
-import 'redux-persist/types/storage/index.d.ts'
 import storage from 'redux-persist/lib/storage'
 import adminReducer from './adminReducer'
 import { persistReducer } from 'redux-persist'

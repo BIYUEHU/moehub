@@ -81,3 +81,7 @@ export async function updateLogin(newPassword: string, oldPassword: string): Pro
 export async function getImgs(): Promise<string[]> {
   return (await http.get('/settings/imgs')).data
 }
+
+export async function postEmail() {
+  return (await http.post('/settings/email')).data
+}

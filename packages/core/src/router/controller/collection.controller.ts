@@ -13,7 +13,7 @@ import {
 import { inject, injectable } from 'inversify'
 import { Symbols } from '../../container'
 import type CollectionService from '../service/collection.service'
-import { collectionSchema } from '@moehub/common'
+import { collectionSchema } from '../../../../common/src'
 import Auth from '../../utils/auth'
 
 @controller('/collection')

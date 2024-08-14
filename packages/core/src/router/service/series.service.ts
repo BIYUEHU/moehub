@@ -1,7 +1,7 @@
 import { inject, injectable } from 'inversify'
 import { Symbols } from '../../container'
 import type CharacterService from './character.service'
-import type { MoehubDataSeries } from '@moehub/common'
+import type { MoehubDataSeries } from '../../../../common/src'
 
 @injectable()
 export class SeriesService {

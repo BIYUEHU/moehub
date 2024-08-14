@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { notification } from 'antd'
-import config from './config.js'
-import { getToken } from '@/store/adminReducer.js'
+import config from '@/config'
+import { getToken } from '@/store/adminReducer'
 import store from '@/store/'
 
 function axiosCreator() {

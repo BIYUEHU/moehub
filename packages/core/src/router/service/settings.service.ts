@@ -1,11 +1,11 @@
-import { createHash, randomUUID } from 'node:crypto'
+import { createHash, randomInt, randomUUID } from 'node:crypto'
 import type {
   MoehubDataLogin,
   MoehubDataUpdateLoginSubmit,
   MoehubDataLoginSubmit,
   MoehubDataSettings,
   MoehubDataSettingsSubmit
-} from '@moehub/common'
+} from '../../../../common/src'
 import { inject, injectable } from 'inversify'
 import { Symbols } from '../../container'
 import type Database from '../../utils/db'
@@ -154,11 +154,9 @@ export class SettingsService {
     ])
   }
 
-  public async email(target: string) {
-    const { name, romaji, birthday } =
-      (await this.db.character.findFirst({ where: { name: target } })) ??
-      (await this.db.character.findFirst({ where: { romaji: target } })) ??
-      {}
+  public async email() {
+    const list = await this.db.character.findMany()
+    const { name, romaji, birthday } = list[randomInt(0, list.length)]
     this.bot.sendMail(
       { name: name ?? '????', romaji: romaji ?? '????', birthday: birthday ?? new Date() },
       await this.get(true)

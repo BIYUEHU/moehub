@@ -1,6 +1,7 @@
 import { Card, Typography, Flex, Button } from 'antd'
 import { HomeOutlined } from '@ant-design/icons'
 import { useNavigate } from 'react-router-dom'
+import { t } from '@/i18n'
 
 const { Title } = Typography
 
@@ -16,10 +17,10 @@ const NotFoundView: React.FC = () => {
               404
             </Title>
             <Title level={3} type="warning">
-              {'页面走丢了呜呜 ヽ(*。>Д<)o゜'}
+              {t`view.404.message`}
             </Title>
             <Button className="cardButton clean" icon={<HomeOutlined />} onClick={() => navigate('/')}>
-              回到主页
+              {t`view.404.button`}
             </Button>
           </Flex>
         </Card>

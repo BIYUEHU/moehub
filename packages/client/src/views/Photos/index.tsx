@@ -5,8 +5,9 @@ import useSWR from 'swr'
 import { getImgs } from '@/http'
 import Loading from '@/components/Loading'
 import ErrorResult from '@/components/result/error'
-import config from '@/http/config'
 import { useCallback, useEffect, useState } from 'react'
+import { t } from '@/i18n'
+import { handleUrl } from '@/utils'
 
 const IMAGES_PER_PAGE = 10
 
@@ -58,7 +59,7 @@ const PhotosView: React.FC = () => {
 
   return (
     <div>
-      <h1>相册集</h1>
+      <h1>{t`view.photos.title`}</h1>
       <Flex justify="center" wrap>
         <div className={styles.photoGallery}>
           <Masonry
@@ -68,7 +69,7 @@ const PhotosView: React.FC = () => {
           >
             {displayedImages.map((img, index) => (
               <div key={Number(index.toString())} className="image-item">
-                <Image src={`${new URL(config.url).origin}/imgs/${img}`} alt={`Photo ${index + 1}`} />
+                <Image src={`${new URL(handleUrl()).origin}/imgs/${img}`} alt={`Photo ${index + 1}`} />
               </div>
             ))}
           </Masonry>
