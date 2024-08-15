@@ -18,7 +18,7 @@
     "type": "git",
     "url": "git+https://github.com/biyuehu/moehub.git"
   },
-  "files": ["lib", "prisma", ".env", "public", "data.sql"],
+  "files": ["lib", "prisma", ".env", "public", "data.sql", "README.md"],
   "dependencies": {
     "@kotori-bot/core": "^1.6.1",
     "@kotori-bot/kotori-plugin-adapter-cmd": "^1.1.1",
