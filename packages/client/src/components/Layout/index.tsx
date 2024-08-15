@@ -1,4 +1,4 @@
-import { Flex, Layout as AntLayout, Avatar, Button } from 'antd'
+import { Flex, Layout as AntLayout, Avatar } from 'antd'
 import { PictureOutlined, PoweroffOutlined, TranslationOutlined } from '@ant-design/icons'
 import { Link, useNavigate } from 'react-router-dom'
 import styles from './styles.module.css'

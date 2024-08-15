@@ -48,8 +48,8 @@ export const characterSchema = Tsu.Object({
   bust: intPositive.optional(),
   waist: intPositive.optional(),
   hip: intPositive.optional(),
-  order: Tsu.Number().int().min(0).default(50),
-  hide: Tsu.Boolean().default(false)
+  order: Tsu.Number().int().min(0).optional(),
+  hide: Tsu.Boolean().optional()
 }).strict()
 
 export const settingsSchema = Tsu.Object({

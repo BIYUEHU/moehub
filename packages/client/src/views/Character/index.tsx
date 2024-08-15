@@ -58,14 +58,17 @@ const CharacterView: React.FC = () => {
       <h1>{t`view.character.title`}</h1>
       <Flex justify="center" align="center" vertical>
         <Card hoverable className="card cardFixed">
-          {data.hitokoto ? <div className={styles.hitokoto}>『{data.hitokoto}』</div> : null}
+          {data.hitokoto ? (
+            <div {...(data.color ? { style: { color: `#${data.color}` } } : {})} className={styles.hitokoto}>
+              『{data.hitokoto}』
+            </div>
+          ) : null}
           {data.songId ? (
             <>
               <br />
               <iframe
                 title={t`view.character.themeSong`}
-                width="330"
-                height="86"
+                style={{ maxWidth: '80%', width: 330, height: 86 }}
                 src={`https://music.163.com/outchain/player?auto=1&type=2&id=${data.songId}&height=66`}
               />
               <br />

@@ -16,7 +16,13 @@ export function handleMoehubDataCharacter(values: MoehubDataCharacterHandle): Mo
   // console.log(values.color)
   return {
     ...values,
-    color: values.color ? (values.color.cleared === false ? values.color.toHex() : '') : undefined,
+    color: values.color
+      ? typeof values.color === 'string'
+        ? values.color
+        : values.color.cleared === false
+          ? values.color.toHex()
+          : ''
+      : undefined,
     birthday: values.birthday ? new Date(values.birthday.toString()).getTime() : undefined
   }
 }

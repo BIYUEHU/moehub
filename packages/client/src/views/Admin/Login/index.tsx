@@ -18,7 +18,9 @@ const LoginView: React.FC = () => {
   const isLogged = !!useSelector(getToken)
 
   useEffect(() => {
-    if (isLogged) navigate('/admin')
+    if (!isLogged) return
+    navigate(0)
+    navigate('/admin')
   }, [navigate, isLogged])
 
   const [form] = Form.useForm<LoginData>()

@@ -18,3 +18,6 @@ migrations
 packages/core/public/imgs/**/*.png
 packages/core/public/imgs/**/*.jpg
 packages/core/public/imgs/**/*.jpeg
+
+packages/core/public/assets/*
+packages/core/public/*.html

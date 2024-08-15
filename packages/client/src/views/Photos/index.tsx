@@ -17,7 +17,7 @@ const PhotosView: React.FC = () => {
   const [displayedImages, setDisplayedImages] = useState<string[]>([])
 
   const loadMoreImages = useCallback(() => {
-    if (!data) return
+    if (!data || data.length === 0) return
     const nextPage = page + 1
     const startIndex = page * IMAGES_PER_PAGE
     const endIndex = startIndex + IMAGES_PER_PAGE
@@ -28,7 +28,7 @@ const PhotosView: React.FC = () => {
   }, [data, page])
 
   useEffect(() => {
-    if (!data) return
+    if (!data || data.length === 0) return
     if (displayedImages.length === 0) {
       setDisplayedImages(data.slice(0, IMAGES_PER_PAGE))
     }

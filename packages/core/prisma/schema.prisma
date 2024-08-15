@@ -12,18 +12,18 @@ model Character {
   name        String
   romaji      String
   gender      Gender
-  alias       String?
+  alias       String?                   @db.LongText
   age         Int?
-  images      String?
-  url         String?
-  description String?
-  comment     String?
-  hitokoto    String?
+  images      String?                   @db.LongText
+  url         String?                   @db.LongText
+  description String?                   @db.LongText
+  comment     String?                   @db.LongText
+  hitokoto    String?                   @db.LongText
   birthday    DateTime?
   voice       String?
-  series      String
+  series      String                    @db.LongText
   seriesGenre SeriesGenre
-  tags        String?
+  tags        String?                   @db.LongText
   hairColor   String?
   eyeColor    String?
   bloodType   bloodType?

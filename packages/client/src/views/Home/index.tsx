@@ -73,9 +73,9 @@ const HomeView: React.FC = () => {
       <h1>{t`view.home.characterList`}</h1>
       <Flex justify="center" wrap className={styles.characterList}>
         {data
-          .filter((item) => Array.isArray(item.images) && item.images.length > 0)
+          .filter((item) => Array.isArray(item.images) && item.images.length > 0 && !item.hide)
           .reverse()
-          .sort((a, b) => a.order - b.order)
+          .sort((a, b) => (a.order ?? 50) - (b.order ?? 50))
           .map((item) => (
             <Card
               key={item.id}
