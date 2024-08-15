@@ -1,15 +1,18 @@
 <!-- markdownlint-disable -->
 
 <div align="center">
-<img src="./packages/client/public/favicon.png" alt="logo"/>
+<img src="https://github.com/BIYUEHU/moehub/raw/master/packages/client/public/favicon.png" alt="logo"/>
 
 # MoeHub
 
 [![wakatime](https://wakatime.com/badge/user/018dc603-712a-4205-a226-d4c9ccd0d02b/project/ff5d1027-c718-48ed-af29-678da4bdce35.svg)](https://wakatime.com/badge/user/018dc603-712a-4205-a226-d4c9ccd0d02b/project/ff5d1027-c718-48ed-af29-678da4bdce35)
+[![Build](https://github.com/BIYUEHU/moehub/actions/workflows/build.yml/badge.svg)](https://github.com/BIYUEHU/moehub/actions/workflows/build.yml)
 
 ⚡ A open source personal favorite character collection website system ⚡
 
 ⚡ 壹個開源的個人向喜愛角色收藏網站系統 ⚡
+
+![](https://github.com/BIYUEHU/moehub/raw/master/packages/data/screenboot-0.png)
 
 </div>
 
@@ -36,7 +39,7 @@ Z(C)hinese characters.
 
 ### Cli commands
 
-![](https://pic.imgdb.cn/item/66bd8160d9c307b7e9eb0016.png)
+![](https://github.com/BIYUEHU/moehub/raw/master/packages/data/screenboot-1.png)
 
 - `help [...command]` Get command help information
 - `pwd` Reset password in force when you forget your password
@@ -45,7 +48,7 @@ Z(C)hinese characters.
 
 ### Characters birthdays reminder
 
-![](https://pic.imgdb.cn/item/66bd8160d9c307b7e9eaff64.png)
+![](https://github.com/BIYUEHU/moehub/raw/master/packages/data/screenboot-2.png)
 
 Supports custom email template, receiver and any email accounts.
 
