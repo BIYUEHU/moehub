@@ -1,7 +1,7 @@
 {
   "name": "@moehub/root",
   "description": "Anime character collection gallery",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "license": "GPL-3.0",
   "author": "Romi <me@hotaru.icu>",

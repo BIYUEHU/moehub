@@ -1,4 +1,13 @@
-# 1.0.0 (2024-08-15)
+## [1.0.1](https://github.com/BIYUEHU/moehub/compare/v1.0.0...v1.0.1) (2024-08-25)
+
+
+### Bug Fixes
+
+* birthday reminder and login reloction ([b82ee8a](https://github.com/BIYUEHU/moehub/commit/b82ee8ac13290db31bb395098ee44705e118f8fe))
+
+
+
+# [1.0.0](https://github.com/BIYUEHU/moehub/compare/82fa140206b09213840d21d5d95df57217693410...v1.0.0) (2024-08-15)
 
 
 ### Bug Fixes
