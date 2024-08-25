@@ -1,6 +1,6 @@
 {
   "name": "moehub",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Your anime character collection gallery, easily build, freely share.",
   "main": "lib/index.js",
   "license": "GPL-3.0",

@@ -174,7 +174,7 @@ export class Bot {
     if ((!birthdays && !smtp_email) || !smtp_host || !smtp_key || !smtp_port || !smtp_target || !smtp_template) return
     if (smtp_hours === undefined) return
 
-    this.taskDispose = this.ctx.task(`* ${smtp_hours} * * *`, async () => {
+    this.taskDispose = this.ctx.task(`0 ${smtp_hours} * * *`, async () => {
       for (const character of await this.ctx.pdb.character.findMany()) {
         if (!character.birthday) continue
         const today = new Date()

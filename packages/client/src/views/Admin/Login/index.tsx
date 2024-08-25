@@ -19,8 +19,9 @@ const LoginView: React.FC = () => {
 
   useEffect(() => {
     if (!isLogged) return
-    navigate(0)
     navigate('/admin')
+    // biome-ignore lint:
+    window.location = window.location
   }, [navigate, isLogged])
 
   const [form] = Form.useForm<LoginData>()
